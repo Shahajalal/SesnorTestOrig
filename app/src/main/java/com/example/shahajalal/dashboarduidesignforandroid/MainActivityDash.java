@@ -118,6 +118,9 @@ public class MainActivityDash extends AppCompatActivity
                 DateFormat dateFormat = new SimpleDateFormat("hh:mm:ss a");
                 Date date = new Date();
                 startTime=dateFormat.format(date);
+                DatabaseHelper db = new DatabaseHelper(this);
+                db.insertevents(startTime,endTime);
+                Log.d(TAG, "insert events successful ");
                 tmp = true;
                 if (fragAccelerometer !=null) fragAccelerometer.toggleSwitcher(true);
                 if (fragGyrometer !=null) fragGyrometer.toggleSwitcher(true);
@@ -133,8 +136,9 @@ public class MainActivityDash extends AppCompatActivity
                     Date date = new Date();
                     endTime = dateFormat.format(date);
                     DatabaseHelper db = new DatabaseHelper(this);
-                    db.insertevents(startTime, endTime);
-                    Log.d(TAG, "time inserted to database");
+                    int id1=db.fatcheventsid();
+                    db.update(id1, endTime);
+                    Log.d(TAG, "time updated to database");
                     tmp = false;
                     t.cancel();
 

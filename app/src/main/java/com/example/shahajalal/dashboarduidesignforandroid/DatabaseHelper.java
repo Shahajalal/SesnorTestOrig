@@ -1,9 +1,11 @@
 package com.example.shahajalal.dashboarduidesignforandroid;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.graphics.Path;
 import android.util.Log;
 
 import java.io.File;
@@ -77,6 +79,14 @@ class DatabaseHelper extends SQLiteOpenHelper {
         OpenDatabase();
         mDatabase.execSQL("insert into events_meta values(null,'"+id+"','"+sensor+"','"+value+"','"+time+"');");
         CloseDatabase();
+    }
+
+    public void update(int id,String time){
+        OpenDatabase();
+        mDatabase.execSQL("update events set end_time='+"+time+"+' where id='+"+id+"+'");
+
+        CloseDatabase();
+
     }
 
     public int fatcheventsid(){
