@@ -35,8 +35,8 @@ import static android.content.ContentValues.TAG;
 public class AccelerometerFragment extends Fragment{
     SensorManager sensorManager;
     Sensor accelerometer;
-    private final Handler mHandler = new Handler();
-    private Runnable mTimer;
+    public Handler mHandler = new Handler();
+    public Runnable mTimer;
     public float x = 0,y=0,z=0;
     public boolean boolSwitch = false;
     GraphView graph;
@@ -107,19 +107,8 @@ public class AccelerometerFragment extends Fragment{
         graph.getViewport().setMaxX(10);
 
 
-        mTimer = new Runnable() {
-            @Override
-            public void run() {
-                xseries.appendData(new DataPoint(counter, x),true,counter);
-                yseries.appendData(new DataPoint(counter, y),true,counter);
-                zseries.appendData(new DataPoint(counter, z),true,counter);
-                Log.d("Accelerometer",Integer.toString(counter));
-                counter++;
-                if (boolSwitch) mHandler.postDelayed(this, 300);
-            }
-        };
 
-        if (boolSwitch) mHandler.postDelayed(mTimer, 300);
+        toggleSwitcher(boolSwitch);
 
 
         graph.addSeries(xseries);
@@ -132,5 +121,32 @@ public class AccelerometerFragment extends Fragment{
         // Inflate the layout for this fragment
         return v;
 
+    }
+    public void toggleSwitcher(boolean bs)
+    {
+        counter = 1;
+        boolSwitch = bs;
+        xseries = new LineGraphSeries<>(new DataPoint[] {});
+        yseries = new LineGraphSeries<>(new DataPoint[] {});
+        zseries = new LineGraphSeries<>(new DataPoint[] {});
+
+        mHandler = null;
+        mTimer = null;
+
+        mHandler = new Handler();
+        mTimer = new Runnable() {
+            @Override
+            public void run() {
+                xseries.appendData(new DataPoint(counter, x),true,counter);
+                yseries.appendData(new DataPoint(counter, y),true,counter);
+                zseries.appendData(new DataPoint(counter, z),true,counter);
+                Log.d("Accelerometer",Integer.toString(counter));
+                counter++;
+                if (boolSwitch) mHandler.postDelayed(this, 300);
+            }
+        };
+
+
+        if (boolSwitch) mHandler.postDelayed(mTimer, 300);
     }
 }

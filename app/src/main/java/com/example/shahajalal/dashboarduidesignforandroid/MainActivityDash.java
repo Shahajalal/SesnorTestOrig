@@ -50,6 +50,9 @@ public class MainActivityDash extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_dash);
+        DatabaseHelper db1=new DatabaseHelper(this);
+        db1.CopyDB(this);
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -63,9 +66,6 @@ public class MainActivityDash extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
         sensorManager=(SensorManager) getSystemService(Context.SENSOR_SERVICE);
-
-
-
     }
 
     @Override
@@ -96,7 +96,7 @@ public class MainActivityDash extends AppCompatActivity
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_toggle) {
 
-            if(item.getTitle() == "Start")
+            if(item.getTitle().toString().equals("Start"))
             {
                 item.setTitle("Stop");
                 accelerometer=sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
@@ -119,8 +119,8 @@ public class MainActivityDash extends AppCompatActivity
                 Date date = new Date();
                 startTime=dateFormat.format(date);
                 tmp = true;
-                fragGyrometer.boolSwitch = true;
-                fragAccelerometer.boolSwitch = true;
+                fragAccelerometer.toggleSwitcher(true);
+                if (fragGyrometer !=null) fragGyrometer.toggleSwitcher(true);
                 startTimer();
 
                 //Start your timer
@@ -137,8 +137,10 @@ public class MainActivityDash extends AppCompatActivity
                     Log.d(TAG, "time inserted to database");
                     tmp = false;
                     t.cancel();
-                    fragGyrometer.boolSwitch = false;
-                    fragAccelerometer.boolSwitch = false;
+
+                    if (fragAccelerometer !=null) fragAccelerometer.toggleSwitcher(false);
+                    if (fragGyrometer !=null) fragGyrometer.toggleSwitcher(false);
+
                     Log.d(TAG, "End Button Clicked");
                 }catch (Exception e){
 

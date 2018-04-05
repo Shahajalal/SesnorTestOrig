@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Dashboard UI Design For Android</string>
+    <string name="app_name">SensorTest</string>
     <string name="title_activity_main_dash">Sensor Test</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>

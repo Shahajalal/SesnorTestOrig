@@ -29,8 +29,8 @@ import com.jjoe64.graphview.series.LineGraphSeries;
 public class gyrometerFragment extends Fragment {
     SensorManager sensorManager;
     Sensor accelerometer;
-    private final Handler mHandler = new Handler();
-    private Runnable mTimer;
+    public Handler mHandler = new Handler();
+    public Runnable mTimer;
     public float x = 0,y=0,z=0;
     public boolean boolSwitch = false;
     GraphView graph;
@@ -102,19 +102,8 @@ public class gyrometerFragment extends Fragment {
         graph.getViewport().setMinX(-10);
         graph.getViewport().setMaxX(10);
 
+        toggleSwitcher(boolSwitch);
 
-        mTimer = new Runnable() {
-            @Override
-            public void run() {
-                xseries.appendData(new DataPoint(counter, x),true,counter);
-                yseries.appendData(new DataPoint(counter, y),true,counter);
-                zseries.appendData(new DataPoint(counter, z),true,counter);
-                counter++;
-                if (boolSwitch) mHandler.postDelayed(this, 300);
-            }
-        };
-
-        if (boolSwitch) mHandler.postDelayed(mTimer, 300);
 
 
 
@@ -124,6 +113,34 @@ public class gyrometerFragment extends Fragment {
 
 
         return v;
+    }
+
+    public void toggleSwitcher(boolean bs)
+    {
+        counter = 1;
+        boolSwitch = bs;
+        xseries = new LineGraphSeries<>(new DataPoint[] {});
+        yseries = new LineGraphSeries<>(new DataPoint[] {});
+        zseries = new LineGraphSeries<>(new DataPoint[] {});
+
+        mHandler = null;
+        mTimer = null;
+
+        mHandler = new Handler();
+        mTimer = new Runnable() {
+            @Override
+            public void run() {
+                xseries.appendData(new DataPoint(counter, x),true,counter);
+                yseries.appendData(new DataPoint(counter, y),true,counter);
+                zseries.appendData(new DataPoint(counter, z),true,counter);
+                Log.d("Gyroscope",Integer.toString(counter));
+                counter++;
+                if (boolSwitch) mHandler.postDelayed(this, 300);
+            }
+        };
+
+
+        if (boolSwitch) mHandler.postDelayed(mTimer, 300);
     }
 
 }
