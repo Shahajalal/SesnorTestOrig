@@ -119,7 +119,7 @@ public class MainActivityDash extends AppCompatActivity
                 Date date = new Date();
                 startTime=dateFormat.format(date);
                 tmp = true;
-                fragAccelerometer.toggleSwitcher(true);
+                if (fragAccelerometer !=null) fragAccelerometer.toggleSwitcher(true);
                 if (fragGyrometer !=null) fragGyrometer.toggleSwitcher(true);
                 startTimer();
 

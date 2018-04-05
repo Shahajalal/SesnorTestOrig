@@ -129,6 +129,10 @@ public class AccelerometerFragment extends Fragment{
         xseries = new LineGraphSeries<>(new DataPoint[] {});
         yseries = new LineGraphSeries<>(new DataPoint[] {});
         zseries = new LineGraphSeries<>(new DataPoint[] {});
+        xseries.setColor(Color.RED);
+        yseries.setColor(Color.GREEN);
+        zseries.setColor(Color.BLUE);
+
 
         mHandler = null;
         mTimer = null;
