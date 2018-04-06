@@ -1,19 +1,18 @@
 package com.example.shahajalal.dashboarduidesignforandroid;
 
-import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
-import android.nfc.Tag;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
+import android.provider.Settings;
 import android.util.Log;
-import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -22,6 +21,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -45,6 +45,8 @@ public class MainActivityDash extends AppCompatActivity
     Timer t;
     TimerTask task;
     public String startTime,endTime;
+    private static final int OVERLAY_REQ_CODE = 25;
+    Intent globalService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,6 +68,7 @@ public class MainActivityDash extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
         sensorManager=(SensorManager) getSystemService(Context.SENSOR_SERVICE);
+        globalService = new Intent(MainActivityDash.this,GlobalTouchService.class);
     }
 
     @Override
@@ -99,6 +102,14 @@ public class MainActivityDash extends AppCompatActivity
             if(item.getTitle().toString().equals("Start"))
             {
                 item.setTitle("Stop");
+
+                if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    if (!Settings.canDrawOverlays(this)) {
+                        Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:" + getPackageName()));
+                        startActivityForResult(intent, OVERLAY_REQ_CODE);
+                    }
+                }
+                startService(globalService);
                 accelerometer=sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
                 if(accelerometer!=null){
                     sensorManager.registerListener(this,accelerometer, SensorManager.SENSOR_DELAY_NORMAL);
@@ -131,6 +142,7 @@ public class MainActivityDash extends AppCompatActivity
             else
             {
                 try {
+                    stopService(globalService);
                     sensorManager.unregisterListener(this);
                     DateFormat dateFormat = new SimpleDateFormat("hh:mm:ss a");
                     Date date = new Date();
@@ -284,5 +296,20 @@ public class MainActivityDash extends AppCompatActivity
         };
 
         t.scheduleAtFixedRate(task, 0, 1000);
+    }
+    @Override
+    public void onRequestPermissionsResult(
+            int requestCode,
+            String permissions[],
+            int[] grantResults) {
+        switch (requestCode) {
+            case OVERLAY_REQ_CODE:
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    Toast.makeText(MainActivityDash.this, "Permission Granted!", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(MainActivityDash.this, "Permission Denied!", Toast.LENGTH_SHORT).show();
+                }
+        }
     }
 }
