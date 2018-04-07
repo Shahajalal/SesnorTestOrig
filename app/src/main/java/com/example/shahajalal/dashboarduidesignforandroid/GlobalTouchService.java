@@ -15,9 +15,11 @@ import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.TextView;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.lang.reflect.Array;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -33,7 +35,7 @@ public class GlobalTouchService extends Service implements OnTouchListener {
 	JSONObject jsonObject = new JSONObject();
 	private LinearLayout touchLayout1, touchLayout2, touchLayout3;
 	int action_outside_counter = 0;
-
+    JSONArray action_move = null;
 	@Override
 	public IBinder onBind(Intent arg0) {
 		Log.d("Intent:", arg0.toString());
@@ -101,50 +103,65 @@ public class GlobalTouchService extends Service implements OnTouchListener {
 
 			Log.i(TAG, "Action :" + event.getAction() + "\t X :" + event.getRawX() + "\t Y :" + event.getRawY());
 
-			String s = "Action :" + event.getAction() + "\t X :" + event.getRawX() + "\t Y :" + event.getRawY();
-			JSONObject json = new JSONObject();
+			JSONObject s = new JSONObject();
+
 			try {
-				json.put("Down_Value", s);
-			} catch (JSONException e) {
+                s.put("X",event.getRawX());
+                s.put("Y",event.getRawX());
+            }
+            catch (JSONException e)
+            {
+                e.printStackTrace();
+            }
 
-			}
+            try {
+                jsonObject.put("ACTION_DOWN", s);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
 
-				try {
-					jsonObject.put("Down_For_Main", json.toString());
-				} catch (JSONException e) {
-
-				}
 		}
 
 
 
 		if (event.getAction() == MotionEvent.ACTION_MOVE) {
 			Log.i(TAG, "Action :" + event.getAction() + "\t X :" + event.getRawX() + "\t Y :" + event.getRawY());
-			String s2 = "Action :" + event.getAction() + "\t X :" + event.getRawX() + "\t Y :" + event.getRawY();
-			JSONObject json2 = new JSONObject();
-			try {
-				json2.put("Move_Value", s2);
-			} catch (JSONException e) {
+			JSONObject s = new JSONObject();
 
+			try {
+				s.put("X",event.getRawX());
+				s.put("Y",event.getRawX());
+			}
+			catch (JSONException e)
+			{
+				e.printStackTrace();
 			}
 
-				try {
-					jsonObject.put("Move_Value_For_Main", json2.toString());
-				} catch (JSONException e) {
 
-				}
-
+            if(action_move == null)
+            {
+                action_move = new JSONArray();
+                action_move.put(s);
+            }
+            else
+            {
+				action_move.put(s);
+            }
 		}
 
 		if (event.getAction() == MotionEvent.ACTION_OUTSIDE) {
 			//Log.i(TAG, "Action :" + event.getAction() + "\t X :" + event.getRawX() + "\t Y :" + event.getRawY());
 			if(action_outside_counter==0) {
-				String s3 = "Action :" + event.getAction() + "\t X :" + event.getRawX() + "\t Y :" + event.getRawY();
-				JSONObject json3 = new JSONObject();
-				try {
-					json3.put("Outside_Value", s3);
-				} catch (JSONException e) {
+				JSONObject s = new JSONObject();
 
+				try {
+					s.put("X",event.getRawX());
+					s.put("Y",event.getRawX());
+					jsonObject.put("ACTION_OUTSIDE",s);
+				}
+				catch (JSONException e)
+				{
+					e.printStackTrace();
 				}
 
 				DateFormat dateFormat = new SimpleDateFormat("hh:mm:ss a");
@@ -153,7 +170,7 @@ public class GlobalTouchService extends Service implements OnTouchListener {
 
 				DatabaseHelper db = new DatabaseHelper(GlobalTouchService.this);
 				int id = db.fatcheventsid();
-				db.inserevents_metagysture(id, "Gesture", json3.toString(), time);
+				db.inserevents_metagysture(id, "Gesture", jsonObject.toString(), time);
 
 				Log.i(TAG, "outside value has been added to database");
 
@@ -161,25 +178,38 @@ public class GlobalTouchService extends Service implements OnTouchListener {
 			action_outside_counter++;
 			//Log.i("ActionCounter",Integer.toString(action_outside_counter));
 			if(action_outside_counter>2)action_outside_counter=0;
-
-
 		}
 
 		if (event.getAction() == MotionEvent.ACTION_UP) {
 			Log.i(TAG, "Action :" + event.getAction() + "\t X :" + event.getRawX() + "\t Y :" + event.getRawY());
-			String s1 = "Action :" + event.getAction() + "\t X :" + event.getRawX() + "\t Y :" + event.getRawY();
-			JSONObject json1 = new JSONObject();
+
 			try {
-				json1.put("Up_Value", s1);
-			} catch (JSONException e) {
-			}
+
+                jsonObject.put("ACTION_MOVE",action_move);
+            }
+            catch (JSONException e)
+            {
+                e.printStackTrace();
+            }
+
+
+            JSONObject s = new JSONObject();
+
+            try {
+                s.put("X",event.getRawX());
+                s.put("Y",event.getRawX());
+            }
+            catch (JSONException e)
+            {
+                e.printStackTrace();
+            }
 
 
 				try {
-					jsonObject.put("Up_Value_For_Main", json1.toString());
+					jsonObject.put("ACTION_UP", s);
 
 				} catch (JSONException e1) {
-
+                    e1.printStackTrace();
 				}
 
 			DateFormat dateFormat = new SimpleDateFormat("hh:mm:ss a");
@@ -191,6 +221,8 @@ public class GlobalTouchService extends Service implements OnTouchListener {
 			db.inserevents_metagysture(id,"Gesture",jsonObject.toString(),time);
 			Log.i("GlobalTouchToDB",jsonObject.toString());
 			Log.i(TAG,"All Gesture has been added to database");
+
+			action_move = null;
 		}
 
 
