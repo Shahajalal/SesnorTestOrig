@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.graphics.Path;
+import android.os.Environment;
 import android.util.Log;
 
 import java.io.File;
@@ -18,13 +19,15 @@ import java.io.OutputStream;
  */
 class DatabaseHelper extends SQLiteOpenHelper {
     private static final String DBNAME = "sensorTest.sqlite";
-    private static final String DBLOCATION = "data/data/com.example.shahajalal.dashboarduidesignforandroid/databases/";
+    private static String DBLOCATION = "data/data/com.example.shahajalal.dashboarduidesignforandroid/databases/";
     private Context mContext;
     private SQLiteDatabase mDatabase;
 
     DatabaseHelper(Context context) {
         super(context, DBNAME, null, 4);
         this.mContext = context;
+        DBLOCATION= Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath() + "/";
+
     }
 
     @Override
@@ -39,7 +42,7 @@ class DatabaseHelper extends SQLiteOpenHelper {
 
     public void OpenDatabase()
     {
-        String dbPath = mContext.getDatabasePath(DBNAME).getPath();
+        String dbPath = DBLOCATION + DBNAME;
         if(mDatabase != null && mDatabase.isOpen())
         {
             return;
@@ -90,8 +93,8 @@ class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     public int fatcheventsid(){
-        mDatabase=this.getReadableDatabase();
-        Cursor cursor=mDatabase.rawQuery("select id from events order by id desc;",null);
+        OpenDatabase();
+        Cursor cursor=mDatabase.rawQuery("select `id` from `events` order by `id` desc;",null);
         cursor.moveToFirst();
          String Strid=cursor.getString(0);
          int id= Integer.parseInt(Strid);

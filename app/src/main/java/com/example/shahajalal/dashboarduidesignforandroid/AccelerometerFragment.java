@@ -35,11 +35,11 @@ import static android.content.ContentValues.TAG;
 public class AccelerometerFragment extends Fragment{
     SensorManager sensorManager;
     Sensor accelerometer;
-    public Handler mHandler = new Handler();
+    public Handler mHandler = null;
     public Runnable mTimer;
     public float x = 0,y=0,z=0;
     public boolean boolSwitch = false;
-    GraphView graph;
+    GraphView graph = null;
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -126,31 +126,82 @@ public class AccelerometerFragment extends Fragment{
     {
         counter = 1;
         boolSwitch = bs;
+
+
         xseries = new LineGraphSeries<>(new DataPoint[] {});
         yseries = new LineGraphSeries<>(new DataPoint[] {});
         zseries = new LineGraphSeries<>(new DataPoint[] {});
         xseries.setColor(Color.RED);
         yseries.setColor(Color.GREEN);
         zseries.setColor(Color.BLUE);
+        if (boolSwitch) {
 
 
-        mHandler = null;
-        mTimer = null;
+            if (mHandler == null) {
+                mHandler = null;
+                mTimer = null;
+                if(graph != null)
+                {
+                    graph.removeAllSeries();
+                    graph.addSeries(xseries);
+                    graph.addSeries(yseries);
+                    graph.addSeries(zseries);
+                }
 
-        mHandler = new Handler();
-        mTimer = new Runnable() {
-            @Override
-            public void run() {
-                xseries.appendData(new DataPoint(counter, x),true,counter);
-                yseries.appendData(new DataPoint(counter, y),true,counter);
-                zseries.appendData(new DataPoint(counter, z),true,counter);
-                Log.d("Accelerometer",Integer.toString(counter));
-                counter++;
-                if (boolSwitch) mHandler.postDelayed(this, 300);
+                try
+                {
+                    mHandler = new Handler();
+                    mTimer = new Runnable() {
+                        @Override
+                        public void run() {
+                            try
+                            {
+                                xseries.appendData(new DataPoint(counter, x), true, counter);
+                                yseries.appendData(new DataPoint(counter, y), true, counter);
+                                zseries.appendData(new DataPoint(counter, z), true, counter);
+                            }
+                            catch (Exception e)
+                            {
+                                e.printStackTrace();
+                            }
+                            catch (Error e2)
+                            {
+                                e2.printStackTrace();
+                            }
+
+                            Log.d("Accelerometer", Integer.toString(counter));
+                            counter++;
+                            if (boolSwitch) {
+                                mHandler.postDelayed(this, 300);
+                            } else {
+                                mHandler = null;
+                                mTimer = null;
+                            }
+                        }
+                    };
+                    mHandler.postDelayed(mTimer, 300);
+                }
+                catch (Exception e)
+                {
+                    e.printStackTrace();
+                }
+                catch (Error e2)
+                {
+                    e2.printStackTrace();
+                }
+
             }
-        };
+        }
+        else
+        {
+            mHandler = null;
+            mTimer = null;
+            if(graph != null) graph.removeAllSeries();
+            counter = 0;
+        }
 
 
-        if (boolSwitch) mHandler.postDelayed(mTimer, 300);
+
+
     }
 }

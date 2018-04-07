@@ -1,8 +1,12 @@
 package com.example.shahajalal.dashboarduidesignforandroid;
 
+import android.Manifest;
+import android.app.Activity;
 import android.app.FragmentTransaction;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -11,7 +15,10 @@ import android.hardware.SensorManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.provider.Settings;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -26,6 +33,7 @@ import android.widget.Toast;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.security.Permission;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -46,6 +54,8 @@ public class MainActivityDash extends AppCompatActivity
     TimerTask task;
     public String startTime,endTime;
     private static final int OVERLAY_REQ_CODE = 25;
+    private static final int EXTERNAL_READ_REQ_CODE = 26;
+    private static final int EXTERNAL_WRITE_REQ_CODE = 27;
     Intent globalService;
 
     @Override
@@ -53,7 +63,7 @@ public class MainActivityDash extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_dash);
         DatabaseHelper db1=new DatabaseHelper(this);
-        db1.CopyDB(this);
+
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -69,6 +79,20 @@ public class MainActivityDash extends AppCompatActivity
 
         sensorManager=(SensorManager) getSystemService(Context.SENSOR_SERVICE);
         globalService = new Intent(MainActivityDash.this,GlobalTouchService.class);
+
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (!Settings.canDrawOverlays(this)) {
+                Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:" + getPackageName()));
+                startActivityForResult(intent, OVERLAY_REQ_CODE);
+            }
+        }
+
+        showPhoneStatePermission();
+
+        FragmentTransaction ft = getFragmentManager().beginTransaction();
+        ft.replace(R.id.frame, fragAccelerometer);
+        ft.commit();
+        db1.CopyDB(this);
     }
 
     @Override
@@ -103,12 +127,6 @@ public class MainActivityDash extends AppCompatActivity
             {
                 item.setTitle("Stop");
                 fragGesture.strGesture = true;
-                if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                    if (!Settings.canDrawOverlays(this)) {
-                        Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:" + getPackageName()));
-                        startActivityForResult(intent, OVERLAY_REQ_CODE);
-                    }
-                }
                 startService(globalService);
                 accelerometer=sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
                 if(accelerometer!=null){
@@ -299,10 +317,8 @@ public class MainActivityDash extends AppCompatActivity
         t.scheduleAtFixedRate(task, 0, 1000);
     }
     @Override
-    public void onRequestPermissionsResult(
-            int requestCode,
-            String permissions[],
-            int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults)
+    {
         switch (requestCode) {
             case OVERLAY_REQ_CODE:
                 if (grantResults.length > 0
@@ -311,6 +327,93 @@ public class MainActivityDash extends AppCompatActivity
                 } else {
                     Toast.makeText(MainActivityDash.this, "Permission Denied!", Toast.LENGTH_SHORT).show();
                 }
+                break;
+            case EXTERNAL_READ_REQ_CODE:
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    Toast.makeText(MainActivityDash.this, "External Storage Read Permission Granted!", Toast.LENGTH_SHORT).show();
+                    (new DatabaseHelper(this)).CopyDB(this);
+                } else {
+                    Toast.makeText(MainActivityDash.this, "External Storage Read Permission Denied!", Toast.LENGTH_SHORT).show();
+                }
+                break;
+            case EXTERNAL_WRITE_REQ_CODE:
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    Toast.makeText(MainActivityDash.this, "External Storage Write Permission Granted!", Toast.LENGTH_SHORT).show();
+                    (new DatabaseHelper(this)).CopyDB(this);
+                } else {
+                    Toast.makeText(MainActivityDash.this, "External Storage Write Permission Denied!", Toast.LENGTH_SHORT).show();
+                }
+                break;
         }
     }
+
+
+    private void showPhoneStatePermission() {
+
+// Here, thisActivity is the current activity
+        if (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.READ_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED) {
+            Log.d("Test","Test");
+            // Permission is not granted
+            // Should we show an explanation?
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                    Manifest.permission.READ_EXTERNAL_STORAGE)) {
+
+                // Show an explanation to the user *asynchronously* -- don't block
+                // this thread waiting for the user's response! After the user
+                // sees the explanation, try again to request the permission.
+                ActivityCompat.requestPermissions(this,
+                        new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+                        EXTERNAL_READ_REQ_CODE);
+
+            } else {
+
+                // No explanation needed; request the permission
+                ActivityCompat.requestPermissions(this,
+                        new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+                        EXTERNAL_READ_REQ_CODE);
+
+                // MY_PERMISSIONS_REQUEST_READ_CONTACTS is an
+                // app-defined int constant. The callback method gets the
+                // result of the request.
+            }
+        } else {
+            // Permission has already been granted
+        }
+
+        if (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED) {
+            Log.d("Test","Test");
+            // Permission is not granted
+            // Should we show an explanation?
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+
+                // Show an explanation to the user *asynchronously* -- don't block
+                // this thread waiting for the user's response! After the user
+                // sees the explanation, try again to request the permission.
+                ActivityCompat.requestPermissions(this,
+                        new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                        EXTERNAL_WRITE_REQ_CODE);
+
+            } else {
+
+                // No explanation needed; request the permission
+                ActivityCompat.requestPermissions(this,
+                        new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                        EXTERNAL_WRITE_REQ_CODE);
+
+                // MY_PERMISSIONS_REQUEST_READ_CONTACTS is an
+                // app-defined int constant. The callback method gets the
+                // result of the request.
+            }
+        } else {
+            // Permission has already been granted
+        }
+    }
+
 }
