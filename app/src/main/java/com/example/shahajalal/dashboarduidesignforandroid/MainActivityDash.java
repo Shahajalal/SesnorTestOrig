@@ -102,7 +102,7 @@ public class MainActivityDash extends AppCompatActivity
             if(item.getTitle().toString().equals("Start"))
             {
                 item.setTitle("Stop");
-
+                fragGesture.strGesture = true;
                 if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                     if (!Settings.canDrawOverlays(this)) {
                         Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:" + getPackageName()));
@@ -143,6 +143,7 @@ public class MainActivityDash extends AppCompatActivity
             {
                 try {
                     stopService(globalService);
+                    fragGesture.strGesture = false;
                     sensorManager.unregisterListener(this);
                     DateFormat dateFormat = new SimpleDateFormat("hh:mm:ss a");
                     Date date = new Date();
@@ -284,7 +285,7 @@ public class MainActivityDash extends AppCompatActivity
                         int id=db.fatcheventsid();
                         Log.d(TAG, "" + "Events last id is : "+id);
                         db.inserevents_metaaccelerometer(id,"accelerometer",accelerometerInsert,time);
-                        db.inserevents_metagyrometer(id,"Gyrometer",gyrometerInsert,time);
+                        db.inserevents_metagyrometer(id,"gyrometer",gyrometerInsert,time);
 
 
                         Log.d(TAG, "Events_meta inserted successfull");

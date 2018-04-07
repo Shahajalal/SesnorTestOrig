@@ -7,6 +7,7 @@ import android.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.series.DataPoint;
@@ -26,10 +27,12 @@ public class GestureFragment extends Fragment{
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
+    public boolean strGesture = false;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+    TextView textView;
 
 
     public GestureFragment() {
@@ -67,6 +70,15 @@ public class GestureFragment extends Fragment{
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_gesture, container, false);
+        TextView tFrag = v.findViewById(R.id.textView);
+        if (strGesture==true)
+        {
+            tFrag.setText("Gesture service is running");
+        }
+        else
+        {
+            tFrag.setText("Gesture Service is not running");
+        }
 
         // Inflate the layout for this fragment
         return v;
