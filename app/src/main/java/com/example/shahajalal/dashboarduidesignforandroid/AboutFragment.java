@@ -1,12 +1,14 @@
 package com.example.shahajalal.dashboarduidesignforandroid;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 
 /**
@@ -25,6 +27,8 @@ public class AboutFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+
+    TextView ae,af,se,sf;
 
 
     public AboutFragment() {
@@ -62,7 +66,34 @@ public class AboutFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_about, container, false);
+        View v=inflater.inflate(R.layout.fragment_about, container, false);
+        ae=v.findViewById(R.id.arifemailid);
+        af=v.findViewById(R.id.ariffacebookid);
+
+        se=v.findViewById(R.id.shahajalalemailid);
+        sf=v.findViewById(R.id.shahajalalfacebookid);
+
+
+
+        af.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent browser= new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.facebook.com/llxx.lord.xxll?fref=hovercard&hc_location=chat"));
+                startActivity(browser);
+            }
+        });
+
+
+
+        sf.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent browser= new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.facebook.com/profile.php?id=100006658636727"));
+                startActivity(browser);
+            }
+        });
+
+        return v;
     }
 
 
