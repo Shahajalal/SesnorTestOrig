@@ -1,12 +1,8 @@
-package com.example.shahajalal.dashboarduidesignforandroid;
+package com.lordsofts.sensortest;
 
-import android.content.Context;
 import android.graphics.Color;
 import android.hardware.Sensor;
-import android.hardware.SensorEvent;
-import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
-import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.os.Handler;
@@ -18,11 +14,7 @@ import android.view.ViewGroup;
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
-
-import java.util.ArrayList;
-import java.util.Collections;
-
-import static android.content.ContentValues.TAG;
+import com.lordsofts.sensortest.R;
 
 
 /**

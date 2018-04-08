@@ -1,4 +1,4 @@
-package com.example.shahajalal.dashboarduidesignforandroid;
+package com.lordsofts.sensortest;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;

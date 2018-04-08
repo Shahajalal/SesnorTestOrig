@@ -1,8 +1,5 @@
-package com.example.shahajalal.dashboarduidesignforandroid;
+package com.lordsofts.sensortest;
 
-import android.content.Context;
-import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.view.LayoutInflater;
@@ -10,28 +7,31 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.lordsofts.sensortest.R;
+
 
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
  * to handle interaction events.
- * Use the {@link AboutFragment#newInstance} factory method to
+ * Use the {@link GestureFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class AboutFragment extends Fragment {
+public class GestureFragment extends Fragment{
+
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
+    public boolean strGesture = false;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+    TextView textView;
 
-    TextView ae,af,se,sf;
 
-
-    public AboutFragment() {
+    public GestureFragment() {
         // Required empty public constructor
     }
 
@@ -41,11 +41,11 @@ public class AboutFragment extends Fragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment AboutFragment.
+     * @return A new instance of fragment GestureFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static AboutFragment newInstance(String param1, String param2) {
-        AboutFragment fragment = new AboutFragment();
+    public static GestureFragment newInstance(String param1, String param2) {
+        GestureFragment fragment = new GestureFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -65,36 +65,19 @@ public class AboutFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        View v = inflater.inflate(R.layout.fragment_gesture, container, false);
+        TextView tFrag = v.findViewById(R.id.textView);
+        if (strGesture==true)
+        {
+            tFrag.setText("Gesture service is running");
+        }
+        else
+        {
+            tFrag.setText("Gesture Service is not running");
+        }
+
         // Inflate the layout for this fragment
-        View v=inflater.inflate(R.layout.fragment_about, container, false);
-        ae=v.findViewById(R.id.arifemailid);
-        af=v.findViewById(R.id.ariffacebookid);
-
-        se=v.findViewById(R.id.shahajalalemailid);
-        sf=v.findViewById(R.id.shahajalalfacebookid);
-
-
-
-        af.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent browser= new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.facebook.com/llxx.lord.xxll?fref=hovercard&hc_location=chat"));
-                startActivity(browser);
-            }
-        });
-
-
-
-        sf.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent browser= new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.facebook.com/profile.php?id=100006658636727"));
-                startActivity(browser);
-            }
-        });
-
         return v;
     }
-
 
 }

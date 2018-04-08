@@ -1,4 +1,4 @@
-package com.example.shahajalal.dashboarduidesignforandroid;
+package com.lordsofts.sensortest;
 
 import android.content.ContentValues;
 import android.content.Context;

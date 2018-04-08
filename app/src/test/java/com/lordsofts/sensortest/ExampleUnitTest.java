@@ -1,4 +1,4 @@
-package com.example.shahajalal.dashboarduidesignforandroid;
+package com.lordsofts.sensortest;
 
 import org.junit.Test;
 
