@@ -149,6 +149,7 @@ public class MainActivityDash extends AppCompatActivity implements NavigationVie
                 tmp = true;
                 if (fragAccelerometer !=null) fragAccelerometer.toggleSwitcher(true);
                 if (fragGyrometer !=null) fragGyrometer.toggleSwitcher(true);
+                if (fragGesture !=null) fragGesture.toggle_switch(true);
                 startTimer();
 
                 //Start your timer
@@ -170,7 +171,7 @@ public class MainActivityDash extends AppCompatActivity implements NavigationVie
 
                     if (fragAccelerometer !=null) fragAccelerometer.toggleSwitcher(false);
                     if (fragGyrometer !=null) fragGyrometer.toggleSwitcher(false);
-
+                    if (fragGesture !=null) fragGesture.toggle_switch(false);
                     Log.d(TAG, "End Button Clicked");
                 }catch (Exception e){
 

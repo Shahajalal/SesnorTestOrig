@@ -24,7 +24,7 @@ public class GestureFragment extends Fragment{
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
     public boolean strGesture = false;
-
+    TextView tFrag = null;
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
@@ -66,7 +66,7 @@ public class GestureFragment extends Fragment{
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_gesture, container, false);
-        TextView tFrag = v.findViewById(R.id.textView);
+         tFrag = v.findViewById(R.id.textView);
         if (strGesture==true)
         {
             tFrag.setText("Gesture service is running");
@@ -78,6 +78,30 @@ public class GestureFragment extends Fragment{
 
         // Inflate the layout for this fragment
         return v;
+    }
+
+    public void toggle_switch(boolean boolGesture)
+    {
+        strGesture = boolGesture;
+        try
+        {
+            if (strGesture==true)
+            {
+                tFrag.setText("Gesture service is running");
+            }
+            else
+            {
+                tFrag.setText("Gesture Service is not running");
+            }
+        }
+        catch (Exception e)
+        {
+
+        }
+        catch (Error e2)
+        {
+
+        }
     }
 
 }
