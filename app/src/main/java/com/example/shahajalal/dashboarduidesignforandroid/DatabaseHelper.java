@@ -86,10 +86,8 @@ class DatabaseHelper extends SQLiteOpenHelper {
 
     public void update(int id,String time){
         OpenDatabase();
-        mDatabase.execSQL("update events set end_time='+"+time+"+' where id='+"+id+"+'");
-
+        mDatabase.execSQL("update events set end_time = '"+time+"' where id = " + Integer.toString(id));
         CloseDatabase();
-
     }
 
     public int fatcheventsid(){

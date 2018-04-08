@@ -42,8 +42,7 @@ import java.util.TimerTask;
 
 import static android.content.ContentValues.TAG;
 
-public class MainActivityDash extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener,SensorEventListener {
+public class MainActivityDash extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener,SensorEventListener {
     AccelerometerFragment fragAccelerometer = new AccelerometerFragment();
     gyrometerFragment fragGyrometer = new gyrometerFragment();
     GestureFragment fragGesture = new GestureFragment();
@@ -144,7 +143,7 @@ public class MainActivityDash extends AppCompatActivity
                 }
 
 
-                DateFormat dateFormat = new SimpleDateFormat("hh:mm:ss a");
+                DateFormat dateFormat = new SimpleDateFormat("yyyy.MM.dd G 'at' HH:mm:ss z");
                 Date date = new Date();
                 startTime=dateFormat.format(date);
                 DatabaseHelper db = new DatabaseHelper(this);
@@ -163,12 +162,11 @@ public class MainActivityDash extends AppCompatActivity
                     stopService(globalService);
                     fragGesture.strGesture = false;
                     sensorManager.unregisterListener(this);
-                    DateFormat dateFormat = new SimpleDateFormat("hh:mm:ss a");
+                    DateFormat dateFormat = new SimpleDateFormat("yyyy.MM.dd G 'at' HH:mm:ss z");
                     Date date = new Date();
                     endTime = dateFormat.format(date);
                     DatabaseHelper db = new DatabaseHelper(this);
-                    int id1=db.fatcheventsid();
-                    db.update(id1, endTime);
+                    db.update(db.fatcheventsid(), endTime);
                     Log.d(TAG, "time updated to database");
                     tmp = false;
                     t.cancel();
@@ -237,11 +235,11 @@ public class MainActivityDash extends AppCompatActivity
         } else if (id == R.id.nav_gesture) {
                 ft.replace(R.id.frame, fragGesture);
                 ft.commit();
-        }  else if (id == R.id.nav_about) {
+        } /* else if (id == R.id.nav_about) {
             AboutFragment fragAbout = new AboutFragment();
                 ft.replace(R.id.frame, fragAbout);
                 ft.commit();
-        }
+        }*/
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);

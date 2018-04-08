@@ -18,15 +18,4 @@
             android:title="Gesture" />
 
     </group>
-
-    <item android:title="Information">
-        <menu>
-            <item
-                android:id="@+id/nav_about"
-                android:icon="@drawable/ic_menu_share"
-                android:title="About" />
-
-        </menu>
-    </item>
-
 </menu>
