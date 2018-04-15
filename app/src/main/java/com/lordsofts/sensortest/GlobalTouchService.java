@@ -218,8 +218,9 @@ public class GlobalTouchService extends Service implements OnTouchListener {
 
 			DatabaseHelper db=new DatabaseHelper(GlobalTouchService.this);
 			/* dosto aita comment kore raksi jate error na dakai    */
-			//MainActivityDash mainActivityDash=(MainActivityDash)getApp;
-			int id1=mainActivityDash.fetchid;
+			SharedPreferences preferences = this.getSharedPreferences("prefName", Context.MODE_PRIVATE);
+			int id1=preferences.getInt("fetchID",-1);
+			Log.d("FetchIDFromGTS",Integer.toString(id1));
 			int id=db.fatcheventsid();
 			db.inserevents_metagysture(id,"Gesture",jsonObject.toString(),time);
 			if(id1 !=-1) {

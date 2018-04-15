@@ -178,11 +178,12 @@ public class MainActivityDash extends AppCompatActivity implements NavigationVie
                     DatabaseHelper db = new DatabaseHelper(this);
                     int idd=db.fatcheventsid();
                     db.update(idd, endTime);
-                    fetchid=-1;
+
                     int id1=fetchid;
                     fetchid();
                     update(id1,endTime);
                     Log.d(TAG, "time updated to database");
+                    fetchid=-1;
                     tmp = false;
                     t.cancel();
 
@@ -373,7 +374,7 @@ public class MainActivityDash extends AppCompatActivity implements NavigationVie
         String sid=Integer.toString(id);
         BackgroundTask backgroundTask =new BackgroundTask(MainActivityDash.this);
         backgroundTask.setMainActivityDash();
-        backgroundTask.execute(method,sid,time);
+        backgroundTask.execute(method,sid);
     }
 
     void insert_events(String phone,String imei){

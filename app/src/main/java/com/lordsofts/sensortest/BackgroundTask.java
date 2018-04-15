@@ -167,9 +167,10 @@ public class BackgroundTask extends AsyncTask<String,Void,String>{
 
         else if(method.equals("update")){
             String id=params[1];
-            String time=params[2];
+
 
             try {
+                Log.d("update",id);
                 URL url =new URL(updateurl);
                 HttpURLConnection httpURLConnection=(HttpURLConnection)url.openConnection();
                 httpURLConnection.setRequestMethod("POST");
@@ -177,8 +178,7 @@ public class BackgroundTask extends AsyncTask<String,Void,String>{
                 OutputStream outputStream=httpURLConnection.getOutputStream();
                 BufferedWriter bufferedWriter=new BufferedWriter(new OutputStreamWriter(outputStream,"UTF-8"));
 
-                String data= URLEncoder.encode("id","UTF-8")+"="+URLEncoder.encode(id,"UTF-8")+"&"+
-                        URLEncoder.encode("time","UTF-8")+"="+URLEncoder.encode(time,"UTF-8");
+                String data= URLEncoder.encode("id","UTF-8")+"="+URLEncoder.encode(id,"UTF-8");
                 bufferedWriter.write(data);
                 bufferedWriter.flush();
                 bufferedWriter.close();
@@ -264,25 +264,20 @@ public class BackgroundTask extends AsyncTask<String,Void,String>{
     protected void onPostExecute(String result) {
         if(result.equals("Accelerometer success")){
 
-            Toast.makeText(context,result,Toast.LENGTH_LONG).show();
             Log.d("Accelerometer",result);
         }
         else if(result.equals("gyroscope success")){
 
-            Toast.makeText(context,result,Toast.LENGTH_LONG).show();
             Log.d("gyroscope",result);
         }
 
         else if(result.equals("gesture success")){
-            Toast.makeText(context,result,Toast.LENGTH_LONG).show();
             Log.d("gesture",result);
         }
         else if(result.equals("update success")){
-            Toast.makeText(context,result,Toast.LENGTH_LONG).show();
             Log.d("update",result);
         }
         else if(result.equals("insert_events success")){
-            Toast.makeText(context,result,Toast.LENGTH_LONG).show();
             Log.d("inser_events",result);
         }
 
@@ -292,11 +287,11 @@ public class BackgroundTask extends AsyncTask<String,Void,String>{
 
             SharedPreferences preferences = context.getSharedPreferences("prefName", Context.MODE_PRIVATE);
             SharedPreferences.Editor edit= preferences.edit();
+
             edit.putInt("fetchID", fid);
             edit.apply();
 
             mainActivityDash.getId(fid);
-            Toast.makeText(context,result,Toast.LENGTH_LONG).show();
         }
 
     }
