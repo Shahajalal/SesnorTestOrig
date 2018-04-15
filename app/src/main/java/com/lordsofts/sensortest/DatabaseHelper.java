@@ -26,7 +26,9 @@ class DatabaseHelper extends SQLiteOpenHelper {
     DatabaseHelper(Context context) {
         super(context, DBNAME, null, 4);
         this.mContext = context;
-        DBLOCATION= Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath() + "/";
+        MainActivityDash mainActivityDash =new MainActivityDash();
+        String s=mainActivityDash.location;
+        DBLOCATION= Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath()+ "/";
 
     }
 

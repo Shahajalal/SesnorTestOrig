@@ -1,7 +1,9 @@
 package com.lordsofts.sensortest;
 
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.PixelFormat;
 import android.os.IBinder;
 import android.util.Log;
@@ -29,6 +31,8 @@ public class GlobalTouchService extends Service implements OnTouchListener {
 	// linear layout will use to detect touch event
 
 	JSONObject jsonObject = new JSONObject();
+	MainActivityDash mainActivityDash;
+
 	private LinearLayout touchLayout1, touchLayout2, touchLayout3;
 	int action_outside_counter = 0;
     JSONArray action_move = null;
@@ -213,8 +217,14 @@ public class GlobalTouchService extends Service implements OnTouchListener {
 			String time=dateFormat.format(date);
 
 			DatabaseHelper db=new DatabaseHelper(GlobalTouchService.this);
+			/* dosto aita comment kore raksi jate error na dakai    */
+			//MainActivityDash mainActivityDash=(MainActivityDash)getApp;
+			int id1=mainActivityDash.fetchid;
 			int id=db.fatcheventsid();
 			db.inserevents_metagysture(id,"Gesture",jsonObject.toString(),time);
+			if(id1 !=-1) {
+                insert_ges(id1, "Gesture", jsonObject.toString());
+            }
 			Log.i("GlobalTouchToDB",jsonObject.toString());
 			Log.i(TAG,"All Gesture has been added to database");
 
@@ -224,5 +234,15 @@ public class GlobalTouchService extends Service implements OnTouchListener {
 
 		return true;
 	}
+
+	void insert_ges(int id,String type,String value){
+
+		String method="gesture";
+		String sid=Integer.toString(id);
+		BackgroundTask backgroundTask=new BackgroundTask(this);
+		backgroundTask.execute(method,sid,type,value);
+	}
+
+
 }
 

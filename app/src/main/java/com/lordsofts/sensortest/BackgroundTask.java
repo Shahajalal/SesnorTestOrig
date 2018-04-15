@@ -1,0 +1,303 @@
+package com.lordsofts.sensortest;
+
+import android.app.Activity;
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.os.AsyncTask;
+import android.util.Log;
+import android.widget.Toast;
+
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLEncoder;
+
+public class BackgroundTask extends AsyncTask<String,Void,String>{
+
+
+    Context context;
+
+    String accurl,eventsurl,updateurl,gestureurl,gyrourl,fetchurl;
+    public int fid;
+    MainActivityDash mainActivityDash;
+    GlobalTouchService gts;
+
+
+    BackgroundTask(Context ctx){
+
+        this.context=ctx;
+
+
+    }
+
+    public void setMainActivityDash()
+    {
+        mainActivityDash = (MainActivityDash) this.context;
+    }
+
+    public void setMainGS()
+    {
+        gts = (GlobalTouchService) this.context;
+    }
+
+    @Override
+    protected void onPreExecute() {
+
+        accurl="http://10.0.2.2/SensorTest/events_meta_acc.php";
+        eventsurl="http://10.0.2.2/SensorTest/insert_events.php";
+        updateurl="http://10.0.2.2/SensorTest/update.php";
+        gestureurl="http://10.0.2.2/SensorTest/events_meta_ges.php";
+        gyrourl="http://10.0.2.2/SensorTest/events_meta_gyro.php";
+        fetchurl="http://10.0.2.2/SensorTest/fetchid.php";
+
+    }
+
+
+    @Override
+    protected String doInBackground(String... params) {
+
+        String method=params[0];
+
+        if(method.equals("accelerometer")){
+
+            String id=params[1];
+            String type=params[2];
+            String value=params[3];
+
+            try {
+                URL url =new URL(accurl);
+                HttpURLConnection httpURLConnection=(HttpURLConnection)url.openConnection();
+                httpURLConnection.setRequestMethod("POST");
+                httpURLConnection.setDoOutput(true);
+                OutputStream outputStream=httpURLConnection.getOutputStream();
+                BufferedWriter bufferedWriter=new BufferedWriter(new OutputStreamWriter(outputStream,"UTF-8"));
+
+                String data= URLEncoder.encode("id","UTF-8")+"="+URLEncoder.encode(id,"UTF-8")+"&"+
+                        URLEncoder.encode("type","UTF-8")+"="+URLEncoder.encode(type,"UTF-8")+"&"+
+                        URLEncoder.encode("value","UTF-8")+"="+URLEncoder.encode(value,"UTF-8");
+                bufferedWriter.write(data);
+                bufferedWriter.flush();
+                bufferedWriter.close();
+                outputStream.close();
+
+                InputStream inputStream=httpURLConnection.getInputStream();
+                inputStream.close();
+                return  "Accelerometer success";
+
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+        }
+
+        else if(method.equals("gyroscope")){
+            String id=params[1];
+            String type=params[2];
+            String value=params[3];
+
+            try {
+                URL url =new URL(gyrourl);
+                HttpURLConnection httpURLConnection=(HttpURLConnection)url.openConnection();
+                httpURLConnection.setRequestMethod("POST");
+                httpURLConnection.setDoOutput(true);
+                OutputStream outputStream=httpURLConnection.getOutputStream();
+                BufferedWriter bufferedWriter=new BufferedWriter(new OutputStreamWriter(outputStream,"UTF-8"));
+
+                String data= URLEncoder.encode("id","UTF-8")+"="+URLEncoder.encode(id,"UTF-8")+"&"+
+                        URLEncoder.encode("type","UTF-8")+"="+URLEncoder.encode(type,"UTF-8")+"&"+
+                        URLEncoder.encode("value","UTF-8")+"="+URLEncoder.encode(value,"UTF-8");
+                bufferedWriter.write(data);
+                bufferedWriter.flush();
+                bufferedWriter.close();
+                outputStream.close();
+
+                InputStream inputStream=httpURLConnection.getInputStream();
+                inputStream.close();
+                return  "gyroscope success";
+
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+
+        else if(method.equals("gesture")){
+            String id=params[1];
+            String type=params[2];
+            String value=params[3];
+
+            try {
+                URL url =new URL(gestureurl);
+                HttpURLConnection httpURLConnection=(HttpURLConnection)url.openConnection();
+                httpURLConnection.setRequestMethod("POST");
+                httpURLConnection.setDoOutput(true);
+                OutputStream outputStream=httpURLConnection.getOutputStream();
+                BufferedWriter bufferedWriter=new BufferedWriter(new OutputStreamWriter(outputStream,"UTF-8"));
+
+                String data= URLEncoder.encode("id","UTF-8")+"="+URLEncoder.encode(id,"UTF-8")+"&"+
+                        URLEncoder.encode("type","UTF-8")+"="+URLEncoder.encode(type,"UTF-8")+"&"+
+                        URLEncoder.encode("value","UTF-8")+"="+URLEncoder.encode(value,"UTF-8");
+                bufferedWriter.write(data);
+                bufferedWriter.flush();
+                bufferedWriter.close();
+                outputStream.close();
+
+                InputStream inputStream=httpURLConnection.getInputStream();
+                inputStream.close();
+                return  "gesture success";
+
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+
+        else if(method.equals("update")){
+            String id=params[1];
+            String time=params[2];
+
+            try {
+                URL url =new URL(updateurl);
+                HttpURLConnection httpURLConnection=(HttpURLConnection)url.openConnection();
+                httpURLConnection.setRequestMethod("POST");
+                httpURLConnection.setDoOutput(true);
+                OutputStream outputStream=httpURLConnection.getOutputStream();
+                BufferedWriter bufferedWriter=new BufferedWriter(new OutputStreamWriter(outputStream,"UTF-8"));
+
+                String data= URLEncoder.encode("id","UTF-8")+"="+URLEncoder.encode(id,"UTF-8")+"&"+
+                        URLEncoder.encode("time","UTF-8")+"="+URLEncoder.encode(time,"UTF-8");
+                bufferedWriter.write(data);
+                bufferedWriter.flush();
+                bufferedWriter.close();
+                outputStream.close();
+
+                InputStream inputStream=httpURLConnection.getInputStream();
+                inputStream.close();
+                return  "update success";
+
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+
+        else if(method.equals("insert events")){
+            String phone=params[1];
+            String imei=params[2];
+
+            try {
+                URL url =new URL(eventsurl);
+                HttpURLConnection httpURLConnection=(HttpURLConnection)url.openConnection();
+                httpURLConnection.setRequestMethod("POST");
+                httpURLConnection.setDoOutput(true);
+                OutputStream outputStream=httpURLConnection.getOutputStream();
+                BufferedWriter bufferedWriter=new BufferedWriter(new OutputStreamWriter(outputStream,"UTF-8"));
+
+                String data= URLEncoder.encode("phone","UTF-8")+"="+URLEncoder.encode(phone,"UTF-8")
+                        +"&"+URLEncoder.encode("imei","UTF-8")+"="+URLEncoder.encode(imei,"UTF-8");
+                bufferedWriter.write(data);
+                bufferedWriter.flush();
+                bufferedWriter.close();
+                outputStream.close();
+
+                InputStream inputStream=httpURLConnection.getInputStream();
+                inputStream.close();
+                return  "insert_events success";
+
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+
+        else if(method.equals("fetchid")){
+
+            try {
+                URL url =new URL(fetchurl);
+                HttpURLConnection httpURLConnection=(HttpURLConnection)url.openConnection();
+                httpURLConnection.setRequestMethod("POST");
+                httpURLConnection.setDoOutput(true);
+                httpURLConnection.setDoInput(true);
+                InputStream inputStream=httpURLConnection.getInputStream();
+                BufferedReader bufferedReader=new BufferedReader(new InputStreamReader(inputStream,"iso-8859-1"));
+                String response=bufferedReader.readLine();
+
+                bufferedReader.close();
+                inputStream.close();
+                httpURLConnection.disconnect();
+                Log.d("fetchid",response);
+                return  response;
+
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return null;
+    }
+
+    @Override
+    protected void onProgressUpdate(Void... values) {
+        super.onProgressUpdate(values);
+    }
+
+    @Override
+    protected void onPostExecute(String result) {
+        if(result.equals("Accelerometer success")){
+
+            Toast.makeText(context,result,Toast.LENGTH_LONG).show();
+            Log.d("Accelerometer",result);
+        }
+        else if(result.equals("gyroscope success")){
+
+            Toast.makeText(context,result,Toast.LENGTH_LONG).show();
+            Log.d("gyroscope",result);
+        }
+
+        else if(result.equals("gesture success")){
+            Toast.makeText(context,result,Toast.LENGTH_LONG).show();
+            Log.d("gesture",result);
+        }
+        else if(result.equals("update success")){
+            Toast.makeText(context,result,Toast.LENGTH_LONG).show();
+            Log.d("update",result);
+        }
+        else if(result.equals("insert_events success")){
+            Toast.makeText(context,result,Toast.LENGTH_LONG).show();
+            Log.d("inser_events",result);
+        }
+
+        else{
+
+            fid=Integer.parseInt(result);
+
+            SharedPreferences preferences = context.getSharedPreferences("prefName", Context.MODE_PRIVATE);
+            SharedPreferences.Editor edit= preferences.edit();
+            edit.putInt("fetchID", fid);
+            edit.apply();
+
+            mainActivityDash.getId(fid);
+            Toast.makeText(context,result,Toast.LENGTH_LONG).show();
+        }
+
+    }
+}

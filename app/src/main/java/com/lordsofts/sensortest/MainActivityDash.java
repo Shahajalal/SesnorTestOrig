@@ -25,12 +25,14 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
+import android.net.Uri;
 
 import com.lordsofts.sensortest.R;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.net.URI;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -48,11 +50,18 @@ public class MainActivityDash extends AppCompatActivity implements NavigationVie
     boolean tmp = false;
     Timer t;
     TimerTask task;
+    public String location;
     public String startTime,endTime;
     private static final int OVERLAY_REQ_CODE = 25;
     private static final int EXTERNAL_READ_REQ_CODE = 26;
     private static final int EXTERNAL_WRITE_REQ_CODE = 27;
     Intent globalService;
+    public int fetchid=-1;
+    public int getId(int idd){
+        fetchid=idd;
+        return idd;
+    }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -145,6 +154,9 @@ public class MainActivityDash extends AppCompatActivity implements NavigationVie
                 startTime=dateFormat.format(date);
                 DatabaseHelper db = new DatabaseHelper(this);
                 db.insertevents(startTime,endTime);
+                String phone="Redmi 5 plus";
+                String imei="233332222344333";
+                insert_events(phone,imei);
                 Log.d(TAG, "insert events successful ");
                 tmp = true;
                 if (fragAccelerometer !=null) fragAccelerometer.toggleSwitcher(true);
@@ -164,7 +176,12 @@ public class MainActivityDash extends AppCompatActivity implements NavigationVie
                     Date date = new Date();
                     endTime = dateFormat.format(date);
                     DatabaseHelper db = new DatabaseHelper(this);
-                    db.update(db.fatcheventsid(), endTime);
+                    int idd=db.fatcheventsid();
+                    db.update(idd, endTime);
+                    fetchid=-1;
+                    int id1=fetchid;
+                    fetchid();
+                    update(id1,endTime);
                     Log.d(TAG, "time updated to database");
                     tmp = false;
                     t.cancel();
@@ -176,6 +193,8 @@ public class MainActivityDash extends AppCompatActivity implements NavigationVie
                 }catch (Exception e){
 
                 }
+
+
                 //Stop your timer
                 item.setTitle("Start");
             }
@@ -184,6 +203,7 @@ public class MainActivityDash extends AppCompatActivity implements NavigationVie
 
         return super.onOptionsItemSelected(item);
     }
+
 
     @Override
     public void onSensorChanged(SensorEvent event) {
@@ -296,10 +316,18 @@ public class MainActivityDash extends AppCompatActivity implements NavigationVie
 
 
                         DatabaseHelper db=new DatabaseHelper(MainActivityDash.this);
+
+                        fetchid();
+                        int id1=fetchid;
                         int id=db.fatcheventsid();
                         Log.d(TAG, "" + "Events last id is : "+id);
                         db.inserevents_metaaccelerometer(id,"accelerometer",accelerometerInsert,time);
+
                         db.inserevents_metagyrometer(id,"gyrometer",gyrometerInsert,time);
+                        if(id1 !=-1) {
+                            insert_gyro(id1, "gyrometer", gyrometerInsert);
+                            insert_acc(id1, "accelerometer", accelerometerInsert);
+                        }
 
 
                         Log.d(TAG, "Events_meta inserted successfull");
@@ -312,6 +340,50 @@ public class MainActivityDash extends AppCompatActivity implements NavigationVie
 
         t.scheduleAtFixedRate(task, 0, 1000);
     }
+
+    void fetchid(){
+        String method="fetchid";
+        BackgroundTask backgroundTask =new BackgroundTask(MainActivityDash.this);
+        backgroundTask.setMainActivityDash();
+        backgroundTask.execute(method);
+    }
+
+    void insert_acc(int id,String type,String value){
+
+        String method="accelerometer";
+        String sid=Integer.toString(id);
+        BackgroundTask backgroundTask =new BackgroundTask(MainActivityDash.this);
+        backgroundTask.setMainActivityDash();
+        backgroundTask.execute(method,sid,type,value);
+    }
+
+    void insert_gyro(int id,String type,String value){
+
+        String method="gyroscope";
+        String sid=Integer.toString(id);
+        BackgroundTask backgroundTask =new BackgroundTask(MainActivityDash.this);
+        backgroundTask.setMainActivityDash();
+        backgroundTask.execute(method,sid,type,value);
+    }
+
+
+    void update(int id,String time){
+
+        String method="update";
+        String sid=Integer.toString(id);
+        BackgroundTask backgroundTask =new BackgroundTask(MainActivityDash.this);
+        backgroundTask.setMainActivityDash();
+        backgroundTask.execute(method,sid,time);
+    }
+
+    void insert_events(String phone,String imei){
+
+        String method="insert events";
+        BackgroundTask backgroundTask =new BackgroundTask(MainActivityDash.this);
+        backgroundTask.setMainActivityDash();
+        backgroundTask.execute(method,phone,imei);
+    }
+
     @Override
     public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults)
     {
