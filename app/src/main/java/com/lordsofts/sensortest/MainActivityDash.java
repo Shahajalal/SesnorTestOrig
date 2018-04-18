@@ -159,21 +159,10 @@ public class MainActivityDash extends AppCompatActivity implements NavigationVie
                 String phone = Build.MANUFACTURER
                         + " " + Build.MODEL + " " + Build.VERSION.RELEASE
                         + " " + Build.VERSION_CODES.class.getFields()[android.os.Build.VERSION.SDK_INT].getName();
-                String imei = "Unknown";
-                if (ContextCompat.checkSelfPermission(this,
-                        Manifest.permission.READ_PHONE_STATE)
-                        == PackageManager.PERMISSION_GRANTED)
 
-                {
-                    if (Build.VERSION.SDK_INT >= 26)
-                    {
-                        imei = Build.getSerial();
-                    }
-                    else
-                    {
-                        imei = Build.SERIAL;
-                    }
-                }
+
+                String imei =Settings.Secure.getString(getContentResolver(),Settings.Secure.ANDROID_ID);
+
 
                 insert_events(phone,imei);
                 Log.d(TAG, "insert events successful ");
