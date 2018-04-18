@@ -154,8 +154,12 @@ public class MainActivityDash extends AppCompatActivity implements NavigationVie
                 startTime=dateFormat.format(date);
                 DatabaseHelper db = new DatabaseHelper(this);
                 db.insertevents(startTime,endTime);
-                String phone="Redmi 5 plus";
-                String imei="233332222344333";
+
+                String phone = Build.MANUFACTURER
+                        + " " + Build.MODEL + " " + Build.VERSION.RELEASE
+                        + " " + Build.VERSION_CODES.class.getFields()[android.os.Build.VERSION.SDK_INT].getName();
+
+                String imei= Build.SERIAL;
                 insert_events(phone,imei);
                 Log.d(TAG, "insert events successful ");
                 tmp = true;
