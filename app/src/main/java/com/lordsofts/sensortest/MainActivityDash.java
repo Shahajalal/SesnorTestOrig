@@ -55,6 +55,7 @@ public class MainActivityDash extends AppCompatActivity implements NavigationVie
     private static final int OVERLAY_REQ_CODE = 25;
     private static final int EXTERNAL_READ_REQ_CODE = 26;
     private static final int EXTERNAL_WRITE_REQ_CODE = 27;
+    private static final int READ_PHONE_STATE_REQ_CODE = 29;
     Intent globalService;
     public int fetchid=-1;
     public int getId(int idd){
@@ -158,8 +159,22 @@ public class MainActivityDash extends AppCompatActivity implements NavigationVie
                 String phone = Build.MANUFACTURER
                         + " " + Build.MODEL + " " + Build.VERSION.RELEASE
                         + " " + Build.VERSION_CODES.class.getFields()[android.os.Build.VERSION.SDK_INT].getName();
+                String imei = "Unknown";
+                if (ContextCompat.checkSelfPermission(this,
+                        Manifest.permission.READ_PHONE_STATE)
+                        == PackageManager.PERMISSION_GRANTED)
 
-                String imei= Build.SERIAL;
+                {
+                    if (Build.VERSION.SDK_INT >= 26)
+                    {
+                        imei = Build.getSerial();
+                    }
+                    else
+                    {
+                        imei = Build.SERIAL;
+                    }
+                }
+
                 insert_events(phone,imei);
                 Log.d(TAG, "insert events successful ");
                 tmp = true;
@@ -419,6 +434,16 @@ public class MainActivityDash extends AppCompatActivity implements NavigationVie
                     Toast.makeText(MainActivityDash.this, "External Storage Write Permission Denied!", Toast.LENGTH_SHORT).show();
                 }
                 break;
+            case  READ_PHONE_STATE_REQ_CODE:
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    Toast.makeText(MainActivityDash.this, "Read Phone State Permission Granted!", Toast.LENGTH_SHORT).show();
+                    (new DatabaseHelper(this)).CopyDB(this);
+                } else {
+                    Toast.makeText(MainActivityDash.this, "Read Phone State Permission Denied!", Toast.LENGTH_SHORT).show();
+                }
+
+                break;
         }
     }
 
@@ -479,6 +504,38 @@ public class MainActivityDash extends AppCompatActivity implements NavigationVie
                 ActivityCompat.requestPermissions(this,
                         new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
                         EXTERNAL_WRITE_REQ_CODE);
+
+                // MY_PERMISSIONS_REQUEST_READ_CONTACTS is an
+                // app-defined int constant. The callback method gets the
+                // result of the request.
+            }
+        } else {
+            // Permission has already been granted
+        }
+
+
+        if (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.READ_PHONE_STATE)
+                != PackageManager.PERMISSION_GRANTED) {
+            Log.d("Test","Test");
+            // Permission is not granted
+            // Should we show an explanation?
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                    Manifest.permission.READ_PHONE_STATE)) {
+
+                // Show an explanation to the user *asynchronously* -- don't block
+                // this thread waiting for the user's response! After the user
+                // sees the explanation, try again to request the permission.
+                ActivityCompat.requestPermissions(this,
+                        new String[]{Manifest.permission.READ_PHONE_STATE},
+                        READ_PHONE_STATE_REQ_CODE);
+
+            } else {
+
+                // No explanation needed; request the permission
+                ActivityCompat.requestPermissions(this,
+                        new String[]{Manifest.permission.READ_PHONE_STATE},
+                        READ_PHONE_STATE_REQ_CODE);
 
                 // MY_PERMISSIONS_REQUEST_READ_CONTACTS is an
                 // app-defined int constant. The callback method gets the
