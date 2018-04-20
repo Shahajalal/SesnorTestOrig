@@ -4,6 +4,7 @@ import android.Manifest;
 import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -12,6 +13,7 @@ import android.hardware.SensorManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.preference.Preference;
 import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -187,8 +189,10 @@ public class MainActivityDash extends AppCompatActivity implements NavigationVie
                     int idd=db.fatcheventsid();
                     db.update(idd, endTime);
 
-                    int id1=fetchid;
-                    fetchid();
+                    //int id1=fetchid;
+                    //fetchid();
+                    SharedPreferences preferences = getApplicationContext().getSharedPreferences("prefName", Context.MODE_PRIVATE);
+                    int id1=preferences.getInt("fetchID",-1);
                     update(id1,endTime);
                     Log.d(TAG, "time updated to database");
                     fetchid=-1;
@@ -326,8 +330,12 @@ public class MainActivityDash extends AppCompatActivity implements NavigationVie
 
                         DatabaseHelper db=new DatabaseHelper(MainActivityDash.this);
 
-                        fetchid();
-                        int id1=fetchid;
+                        //fetchid();
+                        //int id1=fetchid;
+                        SharedPreferences preferences = getApplicationContext().getSharedPreferences("prefName", Context.MODE_PRIVATE);
+                        int id1=preferences.getInt("fetchID",-1);
+                        Log.d("FetchIDFromGTS",Integer.toString(id1));
+
                         int id=db.fatcheventsid();
                         Log.d(TAG, "" + "Events last id is : "+id);
                         db.inserevents_metaaccelerometer(id,"accelerometer",accelerometerInsert,time);
@@ -349,14 +357,14 @@ public class MainActivityDash extends AppCompatActivity implements NavigationVie
 
         t.scheduleAtFixedRate(task, 0, 1000);
     }
-
+/*
     void fetchid(){
         String method="fetchid";
         BackgroundTask backgroundTask =new BackgroundTask(MainActivityDash.this);
         backgroundTask.setMainActivityDash();
         backgroundTask.execute(method);
     }
-
+*/
     void insert_acc(int id,String type,String value){
 
         String method="accelerometer";

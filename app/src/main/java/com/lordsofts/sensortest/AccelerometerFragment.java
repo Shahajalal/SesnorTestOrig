@@ -82,107 +82,104 @@ public class AccelerometerFragment extends Fragment{
 
         View v = inflater.inflate(R.layout.fragment_accelerometer, container, false);
 
+        // Inflate the layout for this fragment
         graph = (GraphView) v.findViewById(R.id.graph);
 
-        xseries = new LineGraphSeries<>(new DataPoint[] {});
-        yseries = new LineGraphSeries<>(new DataPoint[] {});
-        zseries = new LineGraphSeries<>(new DataPoint[] {});
+        if (xseries == null) xseries = new LineGraphSeries<>(new DataPoint[]{});
+        if (yseries == null) yseries = new LineGraphSeries<>(new DataPoint[]{});
+        if (zseries == null) zseries = new LineGraphSeries<>(new DataPoint[]{});
+
+
+
 
         xseries.setColor(Color.RED);
         yseries.setColor(Color.GREEN);
         zseries.setColor(Color.BLUE);
-
-
 
         graph.getViewport().setXAxisBoundsManual(true);
         graph.getViewport().setMinX(-10);
         graph.getViewport().setMaxX(10);
 
 
-
         toggleSwitcher(boolSwitch);
 
-
-        graph.addSeries(xseries);
-        graph.addSeries(yseries);
-        graph.addSeries(zseries);
-
-
-
-
-        // Inflate the layout for this fragment
         return v;
 
+
     }
-    public void toggleSwitcher(boolean bs)
+    public void toggleSwitcher(boolean bs )
     {
         counter = 1;
         boolSwitch = bs;
+        if(graph !=null) {
+            if (xseries != null) xseries.resetData(new DataPoint[]{new DataPoint(0, 0)});
+            if (yseries != null) yseries.resetData(new DataPoint[]{new DataPoint(0, 0)});
+            if (zseries != null) zseries.resetData(new DataPoint[]{new DataPoint(0, 0)});
+            graph.removeAllSeries();
+            graph.addSeries(xseries);
+            graph.addSeries(yseries);
+            graph.addSeries(zseries);
+
+        }
+        else
+        {
+            return;
+        }
 
 
-        xseries = new LineGraphSeries<>(new DataPoint[] {});
-        yseries = new LineGraphSeries<>(new DataPoint[] {});
-        zseries = new LineGraphSeries<>(new DataPoint[] {});
-        xseries.setColor(Color.RED);
-        yseries.setColor(Color.GREEN);
-        zseries.setColor(Color.BLUE);
         if (boolSwitch) {
-
-
             if (mHandler == null) {
-                mHandler = null;
-                mTimer = null;
-                if(graph != null)
-                {
-                    graph.removeAllSeries();
-                    graph.addSeries(xseries);
-                    graph.addSeries(yseries);
-                    graph.addSeries(zseries);
-                }
 
-                try
-                {
-                    mHandler = new Handler();
-                    mTimer = new Runnable() {
-                        @Override
-                        public void run() {
-                            try
-                            {
-                                xseries.appendData(new DataPoint(counter, x), true, counter);
-                                yseries.appendData(new DataPoint(counter, y), true, counter);
-                                zseries.appendData(new DataPoint(counter, z), true, counter);
-                            }
-                            catch (Exception e)
-                            {
-                                e.printStackTrace();
-                            }
-                            catch (Error e2)
-                            {
-                                e2.printStackTrace();
-                            }
+                if (graph != null) {
 
-                            Log.d("Accelerometer", Integer.toString(counter));
-                            counter++;
-                            if (boolSwitch) {
-                                mHandler.postDelayed(this, 300);
-                            } else {
-                                mHandler = null;
-                                mTimer = null;
-                            }
-                        }
-                    };
-                    mHandler.postDelayed(mTimer, 300);
-                }
-                catch (Exception e)
-                {
-                    e.printStackTrace();
-                }
-                catch (Error e2)
-                {
-                    e2.printStackTrace();
-                }
+                    try
+                    {
 
+                        mHandler = new Handler();
+                        mTimer = new Runnable() {
+                            @Override
+                            public void run() {
+                                try
+                                {
+                                    mHandler = new Handler();
+                                    xseries.appendData(new DataPoint(counter, x), true, counter);
+                                    yseries.appendData(new DataPoint(counter, y), true, counter);
+                                    zseries.appendData(new DataPoint(counter, z), true, counter);
+                                }
+                                catch (Exception e)
+                                {
+                                    e.printStackTrace();
+                                }
+                                catch (Error e2)
+                                {
+                                    e2.printStackTrace();
+                                }
+
+
+                                counter++;
+
+                                if (boolSwitch) {
+                                    mHandler.postDelayed(this, 300);
+                                } else {
+                                    mHandler = null;
+                                    mTimer = null;
+                                }
+                            }
+                        };
+
+                        mHandler.postDelayed(mTimer, 300);
+                    }
+                    catch (Exception e)
+                    {
+                        e.printStackTrace();
+                    }
+                    catch (Error e2)
+                    {
+                        e2.printStackTrace();
+                    }
+                }
             }
+
         }
         else
         {
@@ -196,4 +193,5 @@ public class AccelerometerFragment extends Fragment{
 
 
     }
+
 }

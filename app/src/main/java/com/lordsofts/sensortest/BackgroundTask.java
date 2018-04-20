@@ -50,12 +50,13 @@ public class BackgroundTask extends AsyncTask<String,Void,String>{
     @Override
     protected void onPreExecute() {
 
-        accurl="http://10.0.2.2/SensorTest/events_meta_acc.php";
-        eventsurl="http://10.0.2.2/SensorTest/insert_events.php";
-        updateurl="http://10.0.2.2/SensorTest/update.php";
-        gestureurl="http://10.0.2.2/SensorTest/events_meta_ges.php";
-        gyrourl="http://10.0.2.2/SensorTest/events_meta_gyro.php";
-        fetchurl="http://10.0.2.2/SensorTest/fetchid.php";
+        String strAPIRoot = "http://icsdweb.aegean.gr/project/stylios/";
+        accurl=strAPIRoot + "events_meta_acc.php";
+        eventsurl=strAPIRoot+"insert_events.php";
+        updateurl=strAPIRoot+"update.php";
+        gestureurl=strAPIRoot+"events_meta_ges.php";
+        gyrourl=strAPIRoot+"events_meta_gyro.php";
+        fetchurl=strAPIRoot+"fetchid.php";
 
     }
 
@@ -216,9 +217,14 @@ public class BackgroundTask extends AsyncTask<String,Void,String>{
                 outputStream.close();
 
                 InputStream inputStream=httpURLConnection.getInputStream();
-                inputStream.close();
-                return  "insert_events success";
 
+                BufferedReader bufferedReader=new BufferedReader(new InputStreamReader(inputStream,"iso-8859-1"));
+                String response=bufferedReader.readLine();
+
+                bufferedReader.close();
+
+                inputStream.close();
+                return response;
             } catch (MalformedURLException e) {
                 e.printStackTrace();
             } catch (IOException e) {
@@ -277,21 +283,15 @@ public class BackgroundTask extends AsyncTask<String,Void,String>{
         else if(result.equals("update success")){
             Log.d("update",result);
         }
-        else if(result.equals("insert_events success")){
-            Log.d("inser_events",result);
-        }
-
-        else{
-
-            fid=Integer.parseInt(result);
-
+        else if(result.contains("event_code")){
+            fid=Integer.parseInt(result.split("event_code:")[1]);
             SharedPreferences preferences = context.getSharedPreferences("prefName", Context.MODE_PRIVATE);
             SharedPreferences.Editor edit= preferences.edit();
 
             edit.putInt("fetchID", fid);
             edit.apply();
 
-            mainActivityDash.getId(fid);
+            Log.d("insert_events",result);
         }
 
     }

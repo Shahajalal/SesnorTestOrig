@@ -221,11 +221,12 @@ public class GlobalTouchService extends Service implements OnTouchListener {
 			SharedPreferences preferences = this.getSharedPreferences("prefName", Context.MODE_PRIVATE);
 			int id1=preferences.getInt("fetchID",-1);
 			Log.d("FetchIDFromGTS",Integer.toString(id1));
-			int id=db.fatcheventsid();
-			db.inserevents_metagysture(id,"Gesture",jsonObject.toString(),time);
+			//int id=db.fatcheventsid();
+			//db.inserevents_metagysture(id,"Gesture",jsonObject.toString(),time);
 			if(id1 !=-1) {
                 insert_ges(id1, "Gesture", jsonObject.toString());
             }
+
 			Log.i("GlobalTouchToDB",jsonObject.toString());
 			Log.i(TAG,"All Gesture has been added to database");
 
