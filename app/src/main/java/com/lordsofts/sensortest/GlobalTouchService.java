@@ -172,6 +172,14 @@ public class GlobalTouchService extends Service implements OnTouchListener {
 				int id = db.fatcheventsid();
 				db.inserevents_metagysture(id, "Gesture", jsonObject.toString(), time);
 
+				SharedPreferences preferences = this.getSharedPreferences("prefName", Context.MODE_PRIVATE);
+				int id1=preferences.getInt("fetchID",-1);
+				Log.d("FetchIDFromGTS",Integer.toString(id1));
+
+				if(id1 !=-1) {
+					insert_ges(id1, "Gesture", jsonObject.toString());
+				}
+
 				Log.i(TAG, "outside value has been added to database");
 
 			}
@@ -217,7 +225,6 @@ public class GlobalTouchService extends Service implements OnTouchListener {
 			String time=dateFormat.format(date);
 
 			DatabaseHelper db=new DatabaseHelper(GlobalTouchService.this);
-			/* dosto aita comment kore raksi jate error na dakai    */
 			SharedPreferences preferences = this.getSharedPreferences("prefName", Context.MODE_PRIVATE);
 			int id1=preferences.getInt("fetchID",-1);
 			Log.d("FetchIDFromGTS",Integer.toString(id1));
