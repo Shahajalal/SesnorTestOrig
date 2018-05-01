@@ -13,6 +13,13 @@ import com.lordsofts.sensortest.R;
 
 
 /**
+    This file is not in use for calling.
+    It should be launched from MainActivityDash
+    This fragment will represent the About view of the app.
+
+ */
+
+/**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
  * to handle interaction events.
@@ -75,7 +82,7 @@ public class AboutFragment extends Fragment {
         sf=v.findViewById(R.id.shahajalalfacebookid);
 
 
-
+        //Go to the link on click
         af.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -85,7 +92,7 @@ public class AboutFragment extends Fragment {
         });
 
 
-
+//Go to the link on click
         sf.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

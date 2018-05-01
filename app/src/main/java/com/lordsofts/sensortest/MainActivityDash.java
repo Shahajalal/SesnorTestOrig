@@ -72,22 +72,26 @@ public class MainActivityDash extends AppCompatActivity implements NavigationVie
         setContentView(R.layout.activity_main_dash);
         DatabaseHelper db1=new DatabaseHelper(this);
 
-
+        //Toolbar setup
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        //Drawer layout setup
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
+        //Starting up navigation drawer
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
 
         sensorManager=(SensorManager) getSystemService(Context.SENSOR_SERVICE);
         globalService = new Intent(MainActivityDash.this,GlobalTouchService.class);
 
+        //Request for required permissions at runtime
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (!Settings.canDrawOverlays(this)) {
                 Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:" + getPackageName()));
@@ -95,7 +99,7 @@ public class MainActivityDash extends AppCompatActivity implements NavigationVie
             }
         }
 
-        showPhoneStatePermission();
+        showPhoneStatePermission();     //Request the other permissions
 
         FragmentTransaction ft = getFragmentManager().beginTransaction();
         ft.replace(R.id.frame, fragAccelerometer);
@@ -133,6 +137,7 @@ public class MainActivityDash extends AppCompatActivity implements NavigationVie
 
             if(item.getTitle().toString().equals("Start"))
             {
+                //Menu toggle for the app
                 item.setTitle("Stop");
                 fragGesture.strGesture = true;
                 startService(globalService);
@@ -166,8 +171,8 @@ public class MainActivityDash extends AppCompatActivity implements NavigationVie
                 String imei =Settings.Secure.getString(getContentResolver(),Settings.Secure.ANDROID_ID);
 
 
-                insert_events(phone,imei);
-                Log.d(TAG, "insert events successful ");
+                insert_events(phone,imei);      //Created the event
+                Log.d(TAG, "Event creation successful ");
                 tmp = true;
                 if (fragAccelerometer !=null) fragAccelerometer.toggleSwitcher(true);
                 if (fragGyrometer !=null) fragGyrometer.toggleSwitcher(true);

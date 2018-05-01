@@ -87,27 +87,33 @@ public class gyrometerFragment extends Fragment {
         // Inflate the layout for this fragment
         graph = (GraphView) v.findViewById(R.id.graph);
 
+        //This check is done because there could be no instance before the fragment is called. If there is already an instance running then we do not need to create a new series.
         if (xseries == null) xseries = new LineGraphSeries<>(new DataPoint[]{});
         if (yseries == null) yseries = new LineGraphSeries<>(new DataPoint[]{});
         if (zseries == null) zseries = new LineGraphSeries<>(new DataPoint[]{});
 
 
 
-
+        //Color setup according to the axis.
         xseries.setColor(Color.RED);
         yseries.setColor(Color.GREEN);
         zseries.setColor(Color.BLUE);
 
+        //Bound setup for the axis
         graph.getViewport().setXAxisBoundsManual(true);
         graph.getViewport().setMinX(-10);
         graph.getViewport().setMaxX(10);
 
 
+        //We save the currently running state in the boolSwitch. So if it is running then it will continue through the toggleSwitch(true)
         toggleSwitcher(boolSwitch);
 
         return v;
     }
 
+    //Toggle switcher is the function what switches the graph on or off, Or even it continues the previous recorded graph.
+    //This is where we are setting up the Timer to check for the sensor values after a time interval again and again until boolSwitch = False.
+    // To turn this graph off we are sending  toggleSwitch(false)
     public void toggleSwitcher(boolean bs )
     {
         counter = 1;

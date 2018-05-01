@@ -15,6 +15,9 @@ import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
 import com.lordsofts.sensortest.R;
+/**
+*   This file continues the graph representation according to a time interval.
+*/
 
 
 /**
@@ -32,10 +35,14 @@ public class AccelerometerFragment extends Fragment{
     public float x = 0,y=0,z=0;
     public boolean boolSwitch = false;
     GraphView graph = null;
+
+
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
+
+
     LineGraphSeries<DataPoint> xseries;
     LineGraphSeries<DataPoint> yseries;
     LineGraphSeries<DataPoint> zseries;
@@ -85,28 +92,35 @@ public class AccelerometerFragment extends Fragment{
         // Inflate the layout for this fragment
         graph = (GraphView) v.findViewById(R.id.graph);
 
+        //This check is done because there could be no instance before the fragment is called. If there is already an instance running then we do not need to create a new series.
         if (xseries == null) xseries = new LineGraphSeries<>(new DataPoint[]{});
         if (yseries == null) yseries = new LineGraphSeries<>(new DataPoint[]{});
         if (zseries == null) zseries = new LineGraphSeries<>(new DataPoint[]{});
 
 
 
-
+        //Color setup according to the axis.
         xseries.setColor(Color.RED);
         yseries.setColor(Color.GREEN);
         zseries.setColor(Color.BLUE);
 
+        //Bound setup for the axis
         graph.getViewport().setXAxisBoundsManual(true);
         graph.getViewport().setMinX(-10);
         graph.getViewport().setMaxX(10);
 
 
+        //We save the currently running state in the boolSwitch. So if it is running then it will continue through the toggleSwitch(true)
         toggleSwitcher(boolSwitch);
 
         return v;
 
 
     }
+
+    //Toggle switcher is the function what switches the graph on or off, Or even it continues the previous recorded graph.
+    //This is where we are setting up the Timer to check for the sensor values after a time interval again and again until boolSwitch = False.
+    // To turn this graph off we are sending  toggleSwitch(false)
     public void toggleSwitcher(boolean bs )
     {
         counter = 1;
@@ -134,7 +148,7 @@ public class AccelerometerFragment extends Fragment{
 
                     try
                     {
-
+                        //Timer codes
                         mHandler = new Handler();
                         mTimer = new Runnable() {
                             @Override
@@ -157,7 +171,7 @@ public class AccelerometerFragment extends Fragment{
 
 
                                 counter++;
-
+                                //Re run if it is true.
                                 if (boolSwitch) {
                                     mHandler.postDelayed(this, 300);
                                 } else {
