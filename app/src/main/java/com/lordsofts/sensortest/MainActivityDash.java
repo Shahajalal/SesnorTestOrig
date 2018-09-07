@@ -47,6 +47,8 @@ public class MainActivityDash extends AppCompatActivity implements NavigationVie
     AccelerometerFragment fragAccelerometer = new AccelerometerFragment();
     gyrometerFragment fragGyrometer = new gyrometerFragment();
     GestureFragment fragGesture = new GestureFragment();
+    GPS gps=new GPS();
+   MeasureFingerPressure measureFingerPressureFragment=new MeasureFingerPressure();
     SensorManager sensorManager;
     Sensor accelerometer,gyro;
     boolean tmp = false;
@@ -271,11 +273,14 @@ public class MainActivityDash extends AppCompatActivity implements NavigationVie
         } else if (id == R.id.nav_gesture) {
                 ft.replace(R.id.frame, fragGesture);
                 ft.commit();
-        } /* else if (id == R.id.nav_about) {
-            AboutFragment fragAbout = new AboutFragment();
-                ft.replace(R.id.frame, fragAbout);
-                ft.commit();
-        }*/
+        } else if(id==R.id.nav_measurefinger){
+            ft.replace(R.id.frame,measureFingerPressureFragment);
+            ft.commit();
+
+        }else if(id==R.id.nav_gps){
+            ft.replace(R.id.frame,gps);
+            ft.commit();
+        }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);

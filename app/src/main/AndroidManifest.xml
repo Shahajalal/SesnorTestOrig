@@ -3,16 +3,15 @@
     package="com.lordsofts.sensortest">
 
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
-
-
-
-
     <uses-permission android:name="android.permission.GET_TASKS" />
+
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"></uses-permission>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"></uses-permission>
 
     <application
         android:allowBackup="true"
@@ -21,7 +20,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name="com.lordsofts.sensortest.MainActivity">
+        <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -29,7 +28,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.lordsofts.sensortest.MainActivityDash"
+            android:name=".MainActivityDash"
             android:label="@string/title_activity_main_dash"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
@@ -38,8 +37,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <service android:name="com.lordsofts.sensortest.GlobalTouchService" >
-        </service>
+
+        <service android:name=".GlobalTouchService"></service>
 
     </application>
 

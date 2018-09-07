@@ -122,6 +122,10 @@ public class GlobalTouchService extends Service implements OnTouchListener {
 
 		}
 
+		float pressure=event.getPressure();
+		SharedPreferences.Editor editor = getSharedPreferences("pressuresend", MODE_PRIVATE).edit();
+		editor.putString("pressure", String.valueOf(pressure));
+		editor.apply();
 
 
 		if (event.getAction() == MotionEvent.ACTION_MOVE) {
