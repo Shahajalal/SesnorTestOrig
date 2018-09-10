@@ -18,11 +18,11 @@
             android:title="Gesture" />
         <item
             android:id="@+id/nav_measurefinger"
-            android:icon="@drawable/gesture"
+            android:icon="@drawable/pressure"
             android:title="MeasureFingerPressure" />
         <item
             android:id="@+id/nav_gps"
-            android:icon="@drawable/gesture"
+            android:icon="@drawable/gps"
             android:title="GPS" />
 
     </group>

@@ -161,6 +161,8 @@ public class GlobalTouchService extends Service implements OnTouchListener {
 				try {
 					s.put("X",event.getRawX());
 					s.put("Y",event.getRawX());
+					SharedPreferences preferences = this.getSharedPreferences("pressuresend", Context.MODE_PRIVATE);
+					s.put("Finger Pressure",preferences.getString("pressure",null));
 					jsonObject.put("ACTION_OUTSIDE",s);
 				}
 				catch (JSONException e)

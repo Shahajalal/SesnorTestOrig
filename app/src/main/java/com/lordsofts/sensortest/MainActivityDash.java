@@ -302,6 +302,8 @@ public class MainActivityDash extends AppCompatActivity implements NavigationVie
                         String time=dateFormat.format(date);
                         Log.d("CurTime","Time is : " + time);
 
+                        SharedPreferences preferencesgps = getApplicationContext().getSharedPreferences("gpsvalue", Context.MODE_PRIVATE);
+                        String gps=preferencesgps.getString("gps","GPS Not Ready");
 
                         JSONObject accelerometerobj=new JSONObject();
                         try{
@@ -326,6 +328,8 @@ public class MainActivityDash extends AppCompatActivity implements NavigationVie
                         {
                             //Nothing to do
                         }
+
+
 
 
                         Log.d(TAG, "All three json object has created");
@@ -354,6 +358,7 @@ public class MainActivityDash extends AppCompatActivity implements NavigationVie
                         if(id1 !=-1) {
                             insert_gyro(id1, "gyrometer", gyrometerInsert);
                             insert_acc(id1, "accelerometer", accelerometerInsert);
+                            insert_gps(id1,"GPS",gps);
                         }
 
 
@@ -378,6 +383,14 @@ public class MainActivityDash extends AppCompatActivity implements NavigationVie
     void insert_acc(int id,String type,String value){
 
         String method="accelerometer";
+        String sid=Integer.toString(id);
+        BackgroundTask backgroundTask =new BackgroundTask(MainActivityDash.this);
+        backgroundTask.setMainActivityDash();
+        backgroundTask.execute(method,sid,type,value);
+    }
+    void insert_gps(int id,String type,String value){
+
+        String method="gps";
         String sid=Integer.toString(id);
         BackgroundTask backgroundTask =new BackgroundTask(MainActivityDash.this);
         backgroundTask.setMainActivityDash();

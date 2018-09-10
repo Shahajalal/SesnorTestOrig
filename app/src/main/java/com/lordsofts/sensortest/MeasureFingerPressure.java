@@ -31,7 +31,7 @@ public class MeasureFingerPressure extends Fragment {
         View v = inflater.inflate(R.layout.fragment_measure_fingerprint_pressure, container, false);
         measurefinger= v.findViewById(R.id.measurefingerpressuretextid);
         SharedPreferences preferences = this.getActivity().getSharedPreferences("pressuresend", Context.MODE_PRIVATE);
-        measurefinger.setText(preferences.getString("pressure",null));
+        measurefinger.setText("The Finger Pressure is \n"+preferences.getString("pressure",null));
         return v;
 
 

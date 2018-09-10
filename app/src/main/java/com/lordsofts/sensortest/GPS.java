@@ -21,6 +21,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import static android.content.Context.MODE_PRIVATE;
+
 
 public class GPS extends Fragment {
     Button button;
@@ -33,8 +35,6 @@ public class GPS extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_gps, container, false);
-
-        button = v.findViewById(R.id.requestlocationbtnid);
         textView = v.findViewById(R.id.coordinatestextviewid);
 
         locationManager = (LocationManager) this.getActivity().getSystemService(Context.LOCATION_SERVICE);
@@ -42,7 +42,11 @@ public class GPS extends Fragment {
             @Override
             public void onLocationChanged(Location location) {
 
+                SharedPreferences.Editor editor = getActivity().getSharedPreferences("gpsvalue", MODE_PRIVATE).edit();
+                editor.putString("gps","{Latitude:"+location.getLatitude()+",Longitude:"+location.getLongitude()+"}");
+                editor.apply();
                 textView.append("\n "+location.getLatitude()+" "+location.getLongitude());
+
             }
 
             @Override
@@ -94,12 +98,7 @@ public class GPS extends Fragment {
     }
 
     private void configureButton() {
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
                 locationManager.requestLocationUpdates("gps", 5000, 0, locationListener);
-            }
-        });
 
     }
 

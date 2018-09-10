@@ -24,7 +24,7 @@ public class BackgroundTask extends AsyncTask<String,Void,String>{
 
     Context context;
 
-    String accurl,eventsurl,updateurl,gestureurl,gyrourl,fetchurl;
+    String accurl,eventsurl,updateurl,gestureurl,gyrourl,fetchurl,gpsurl;
     public int fid;
     MainActivityDash mainActivityDash;
     GlobalTouchService gts;
@@ -50,13 +50,17 @@ public class BackgroundTask extends AsyncTask<String,Void,String>{
     @Override
     protected void onPreExecute() {
 
-        String strAPIRoot = "http://icsdweb.aegean.gr/project/stylios/";
+        //String strAPIRoot="http://10.0.2.2/SensorTest/";
+        //String strAPIRoot = "http://icsdweb.aegean.gr/project/stylios/";
+       String strAPIRoot = "http://lordsofts.tk/dev/sensorTest/";
         accurl=strAPIRoot + "events_meta_acc.php";
         eventsurl=strAPIRoot+"insert_events.php";
         updateurl=strAPIRoot+"update.php";
         gestureurl=strAPIRoot+"events_meta_ges.php";
         gyrourl=strAPIRoot+"events_meta_gyro.php";
         fetchurl=strAPIRoot+"fetchid.php";
+        gpsurl=strAPIRoot+"events_meta_gps.php";
+
 
     }
 
@@ -99,6 +103,42 @@ public class BackgroundTask extends AsyncTask<String,Void,String>{
             }
 
         }
+
+       else if(method.equals("gps")){
+
+            String id=params[1];
+            String type=params[2];
+            String value=params[3];
+
+            try {
+                URL url =new URL(gpsurl);
+                HttpURLConnection httpURLConnection=(HttpURLConnection)url.openConnection();
+                httpURLConnection.setRequestMethod("POST");
+                httpURLConnection.setDoOutput(true);
+                OutputStream outputStream=httpURLConnection.getOutputStream();
+                BufferedWriter bufferedWriter=new BufferedWriter(new OutputStreamWriter(outputStream,"UTF-8"));
+
+                String data= URLEncoder.encode("id","UTF-8")+"="+URLEncoder.encode(id,"UTF-8")+"&"+
+                        URLEncoder.encode("type","UTF-8")+"="+URLEncoder.encode(type,"UTF-8")+"&"+
+                        URLEncoder.encode("value","UTF-8")+"="+URLEncoder.encode(value,"UTF-8");
+                bufferedWriter.write(data);
+                bufferedWriter.flush();
+                bufferedWriter.close();
+                outputStream.close();
+
+                InputStream inputStream=httpURLConnection.getInputStream();
+                inputStream.close();
+                return  "GPS Success";
+
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+        }
+
+
 
         else if(method.equals("gyroscope")){
             String id=params[1];
