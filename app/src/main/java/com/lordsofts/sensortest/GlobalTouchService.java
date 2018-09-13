@@ -99,6 +99,7 @@ public class GlobalTouchService extends Service implements OnTouchListener {
 
 
 		if (event.getAction() == MotionEvent.ACTION_DOWN) {
+
 			jsonObject = new JSONObject();
 
 			Log.i(TAG, "Action :" + event.getAction() + "\t X :" + event.getRawX() + "\t Y :" + event.getRawY());
@@ -126,11 +127,14 @@ public class GlobalTouchService extends Service implements OnTouchListener {
 		SharedPreferences.Editor editor = getSharedPreferences("pressuresend", MODE_PRIVATE).edit();
 		editor.putString("pressure", String.valueOf(pressure));
 		editor.apply();
+		Log.d("TOuch presseure from gl",String.valueOf(pressure));
 
 
 		if (event.getAction() == MotionEvent.ACTION_MOVE) {
 			Log.i(TAG, "Action :" + event.getAction() + "\t X :" + event.getRawX() + "\t Y :" + event.getRawY());
 			JSONObject s = new JSONObject();
+			editor.putString("pressure", String.valueOf(event.getPressure()));
+			editor.apply();
 
 			try {
 				s.put("X",event.getRawX());
@@ -157,6 +161,7 @@ public class GlobalTouchService extends Service implements OnTouchListener {
 			//Log.i(TAG, "Action :" + event.getAction() + "\t X :" + event.getRawX() + "\t Y :" + event.getRawY());
 			if(action_outside_counter==0) {
 				JSONObject s = new JSONObject();
+				editor.putString("pressure", String.valueOf(event.getPressure()));
 
 				try {
 					s.put("X",event.getRawX());
@@ -174,9 +179,9 @@ public class GlobalTouchService extends Service implements OnTouchListener {
 				Date date = new Date();
 				String time = dateFormat.format(date);
 
-				DatabaseHelper db = new DatabaseHelper(GlobalTouchService.this);
-				int id = db.fatcheventsid();
-				db.inserevents_metagysture(id, "Gesture", jsonObject.toString(), time);
+				//DatabaseHelper db = new DatabaseHelper(GlobalTouchService.this);
+				//int id = db.fatcheventsid();
+				//db.inserevents_metagysture(id, "Gesture", jsonObject.toString(), time);
 
 				SharedPreferences preferences = this.getSharedPreferences("prefName", Context.MODE_PRIVATE);
 				int id1=preferences.getInt("fetchID",-1);
@@ -196,6 +201,8 @@ public class GlobalTouchService extends Service implements OnTouchListener {
 
 		if (event.getAction() == MotionEvent.ACTION_UP) {
 			Log.i(TAG, "Action :" + event.getAction() + "\t X :" + event.getRawX() + "\t Y :" + event.getRawY());
+
+			editor.putString("pressure", "0.0");
 
 			try {
 

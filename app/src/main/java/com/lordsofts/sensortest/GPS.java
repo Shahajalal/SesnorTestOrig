@@ -15,11 +15,13 @@ import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityCompat;
+import android.text.method.ScrollingMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import static android.content.Context.MODE_PRIVATE;
 
@@ -29,23 +31,30 @@ public class GPS extends Fragment {
     TextView textView;
     LocationManager locationManager;
     LocationListener locationListener;
-
+    public boolean boolSwitch = false;
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_gps, container, false);
         textView = v.findViewById(R.id.coordinatestextviewid);
-
+        textView.setVisibility(View.GONE);
+        toggleSwitcher(boolSwitch);
         locationManager = (LocationManager) this.getActivity().getSystemService(Context.LOCATION_SERVICE);
         locationListener = new LocationListener() {
             @Override
             public void onLocationChanged(Location location) {
 
-                SharedPreferences.Editor editor = getActivity().getSharedPreferences("gpsvalue", MODE_PRIVATE).edit();
-                editor.putString("gps","{Latitude:"+location.getLatitude()+",Longitude:"+location.getLongitude()+"}");
-                editor.apply();
-                textView.append("\n "+location.getLatitude()+" "+location.getLongitude());
+                try {
+                    SharedPreferences.Editor editor = getActivity().getSharedPreferences("gpsvalue", MODE_PRIVATE).edit();
+                    editor.putString("gps", "{Latitude:" + location.getLatitude() + "Longitude:" + location.getLongitude() + "}");
+                    editor.apply();
+                    textView.append("\n " + location.getLatitude() + " " + location.getLongitude());
+                    textView.setMovementMethod(new ScrollingMovementMethod());
+
+                }catch(Exception e){
+
+                }
 
             }
 
@@ -98,7 +107,24 @@ public class GPS extends Fragment {
     }
 
     private void configureButton() {
-                locationManager.requestLocationUpdates("gps", 5000, 0, locationListener);
+                locationManager.requestLocationUpdates("gps",   100, 0, locationListener);
+
+    }
+
+    public void toggleSwitcher(boolean bs ){
+        boolSwitch=bs;
+        if(boolSwitch){
+            try {
+                Toast.makeText(getActivity().getApplicationContext(), "Please Wait unitl the GPS will ready", Toast.LENGTH_SHORT).show();
+                textView.setVisibility(View.VISIBLE);
+            }catch (Exception e){
+
+            }
+        }else{
+
+            textView.setVisibility(View.GONE);
+        }
+
 
     }
 

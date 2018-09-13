@@ -48,7 +48,7 @@ public class MainActivityDash extends AppCompatActivity implements NavigationVie
     gyrometerFragment fragGyrometer = new gyrometerFragment();
     GestureFragment fragGesture = new GestureFragment();
     GPS gps=new GPS();
-   MeasureFingerPressure measureFingerPressureFragment=new MeasureFingerPressure();
+    MeasureFingerPressure measureFingerPressureFragment=new MeasureFingerPressure();
     SensorManager sensorManager;
     Sensor accelerometer,gyro;
     boolean tmp = false;
@@ -72,7 +72,7 @@ public class MainActivityDash extends AppCompatActivity implements NavigationVie
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_dash);
-        DatabaseHelper db1=new DatabaseHelper(this);
+        //DatabaseHelper db1=new DatabaseHelper(this);
 
         //Toolbar setup
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -106,7 +106,7 @@ public class MainActivityDash extends AppCompatActivity implements NavigationVie
         FragmentTransaction ft = getFragmentManager().beginTransaction();
         ft.replace(R.id.frame, fragAccelerometer);
         ft.commit();
-        db1.CopyDB(this);
+       // db1.CopyDB(this);
     }
 
     @Override
@@ -162,8 +162,8 @@ public class MainActivityDash extends AppCompatActivity implements NavigationVie
                 DateFormat dateFormat = new SimpleDateFormat("yyyy.MM.dd G 'at' HH:mm:ss z");
                 Date date = new Date();
                 startTime=dateFormat.format(date);
-                DatabaseHelper db = new DatabaseHelper(this);
-                db.insertevents(startTime,endTime);
+               // DatabaseHelper db = new DatabaseHelper(this);
+               // db.insertevents(startTime,endTime);
 
                 String phone = Build.MANUFACTURER
                         + " " + Build.MODEL + " " + Build.VERSION.RELEASE
@@ -176,7 +176,15 @@ public class MainActivityDash extends AppCompatActivity implements NavigationVie
                 insert_events(phone,imei);      //Created the event
                 Log.d(TAG, "Event creation successful ");
                 tmp = true;
-                if (fragAccelerometer !=null) fragAccelerometer.toggleSwitcher(true);
+                if (fragAccelerometer !=null) {
+                    fragAccelerometer.toggleSwitcher(true);
+                }
+                if(measureFingerPressureFragment!=null){
+                    measureFingerPressureFragment.toggleSwitcher(true);
+                }
+                if(gps!=null){
+                    gps.toggleSwitcher(true);
+                }
                 if (fragGyrometer !=null) fragGyrometer.toggleSwitcher(true);
                 if (fragGesture !=null) fragGesture.toggle_switch(true);
                 startTimer();
@@ -192,9 +200,9 @@ public class MainActivityDash extends AppCompatActivity implements NavigationVie
                     DateFormat dateFormat = new SimpleDateFormat("yyyy.MM.dd G 'at' HH:mm:ss z");
                     Date date = new Date();
                     endTime = dateFormat.format(date);
-                    DatabaseHelper db = new DatabaseHelper(this);
-                    int idd=db.fatcheventsid();
-                    db.update(idd, endTime);
+                   // DatabaseHelper db = new DatabaseHelper(this);
+                    //int idd=db.fatcheventsid();
+                   // db.update(idd, endTime);
 
                     //int id1=fetchid;
                     //fetchid();
@@ -206,9 +214,19 @@ public class MainActivityDash extends AppCompatActivity implements NavigationVie
                     tmp = false;
                     t.cancel();
 
-                    if (fragAccelerometer !=null) fragAccelerometer.toggleSwitcher(false);
+                    if (fragGesture !=null) {
+                        fragGesture.toggle_switch(false);
+                    }
+                    if(measureFingerPressureFragment!=null){
+                        measureFingerPressureFragment.toggleSwitcher(false);
+                    }
+                    if (fragAccelerometer !=null) {
+                        fragAccelerometer.toggleSwitcher(false);
+                    }
+                    if(gps!=null){
+                        gps.toggleSwitcher(false);
+                    }
                     if (fragGyrometer !=null) fragGyrometer.toggleSwitcher(false);
-                    if (fragGesture !=null) fragGesture.toggle_switch(false);
                     Log.d(TAG, "End Button Clicked");
                 }catch (Exception e){
 
@@ -304,6 +322,9 @@ public class MainActivityDash extends AppCompatActivity implements NavigationVie
 
                         SharedPreferences preferencesgps = getApplicationContext().getSharedPreferences("gpsvalue", Context.MODE_PRIVATE);
                         String gps=preferencesgps.getString("gps","GPS Not Ready");
+                        if(gps.equals("GPS Not Ready")){
+                            Log.d("GPS","GPS is not ready yet");
+                        }
 
                         JSONObject accelerometerobj=new JSONObject();
                         try{
@@ -342,7 +363,7 @@ public class MainActivityDash extends AppCompatActivity implements NavigationVie
                         Log.d(TAG, accelerometerInsert);
 
 
-                        DatabaseHelper db=new DatabaseHelper(MainActivityDash.this);
+                        //DatabaseHelper db=new DatabaseHelper(MainActivityDash.this);
 
                         //fetchid();
                         //int id1=fetchid;
@@ -350,11 +371,11 @@ public class MainActivityDash extends AppCompatActivity implements NavigationVie
                         int id1=preferences.getInt("fetchID",-1);
                         Log.d("FetchIDFromGTS",Integer.toString(id1));
 
-                        int id=db.fatcheventsid();
-                        Log.d(TAG, "" + "Events last id is : "+id);
-                        db.inserevents_metaaccelerometer(id,"accelerometer",accelerometerInsert,time);
+                        //int id=db.fatcheventsid();
+                       // Log.d(TAG, "" + "Events last id is : "+id);
+                       // db.inserevents_metaaccelerometer(id,"accelerometer",accelerometerInsert,time);
 
-                        db.inserevents_metagyrometer(id,"gyrometer",gyrometerInsert,time);
+                       // db.inserevents_metagyrometer(id,"gyrometer",gyrometerInsert,time);
                         if(id1 !=-1) {
                             insert_gyro(id1, "gyrometer", gyrometerInsert);
                             insert_acc(id1, "accelerometer", accelerometerInsert);

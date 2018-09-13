@@ -49,7 +49,7 @@ class DatabaseHelper extends SQLiteOpenHelper {
         {
             return;
         }
-        mDatabase = SQLiteDatabase.openDatabase(dbPath,null, SQLiteDatabase.OPEN_READWRITE);
+        //mDatabase = SQLiteDatabase.openDatabase(dbPath,null, SQLiteDatabase.OPEN_READWRITE);
 
     }
     public void CloseDatabase(){
