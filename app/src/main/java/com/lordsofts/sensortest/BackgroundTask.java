@@ -52,7 +52,8 @@ public class BackgroundTask extends AsyncTask<String,Void,String>{
 
         //String strAPIRoot="http://10.0.2.2/SensorTest/";
         //String strAPIRoot = "http://icsdweb.aegean.gr/project/stylios/";
-       String strAPIRoot = "http://lordsofts.tk/dev/sensorTest/";
+        //String strAPIRoot = "http://lordsofts.tk/dev/sensorTest/";
+        String strAPIRoot = "http://18.222.142.220/stylious/";
         accurl=strAPIRoot + "events_meta_acc.php";
         eventsurl=strAPIRoot+"insert_events.php";
         updateurl=strAPIRoot+"update.php";

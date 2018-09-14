@@ -36,6 +36,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import static android.content.ContentValues.TAG;
 import static android.content.Context.MODE_PRIVATE;
 
 
@@ -51,7 +52,7 @@ public class MeasureFingerPressure extends Fragment {
 
         measurefinger.setVisibility(View.GONE);
         Log.d("MeasureFingerPressure","Test test");
-        toggleSwitcher(boolSwitch);
+
 
 
 
@@ -73,8 +74,8 @@ public class MeasureFingerPressure extends Fragment {
                     } else if (event.getAction() == MotionEvent.ACTION_BUTTON_PRESS) {
 
                             measurefinger.setText("The finger pressure is : " + event.getPressure());
-
                     }
+
 
                     return true;
             }
@@ -90,22 +91,17 @@ public class MeasureFingerPressure extends Fragment {
         //SharedPreferences preferences = this.getActivity().getSharedPreferences("pressuresend", Context.MODE_PRIVATE);
         //measurefinger.setText("The Finger Pressure is :"+preferences.getString("pressure",null));
 
+        toggleSwitcher(boolSwitch);
         return v;
 
     }
 
     public void toggleSwitcher(boolean bs) {
        boolSwitch=bs;
-
         if(boolSwitch){
-
-            try {
-
+            if(measurefinger!=null) {
                 measurefinger.setVisibility(View.VISIBLE);
-            }catch (NullPointerException e){
-
             }
-
         }else
         {
             measurefinger.setVisibility(View.GONE);

@@ -39,7 +39,7 @@ public class GPS extends Fragment {
         View v = inflater.inflate(R.layout.fragment_gps, container, false);
         textView = v.findViewById(R.id.coordinatestextviewid);
         textView.setVisibility(View.GONE);
-        toggleSwitcher(boolSwitch);
+
         locationManager = (LocationManager) this.getActivity().getSystemService(Context.LOCATION_SERVICE);
         locationListener = new LocationListener() {
             @Override
@@ -49,7 +49,7 @@ public class GPS extends Fragment {
                     SharedPreferences.Editor editor = getActivity().getSharedPreferences("gpsvalue", MODE_PRIVATE).edit();
                     editor.putString("gps", "{Latitude:" + location.getLatitude() + "Longitude:" + location.getLongitude() + "}");
                     editor.apply();
-                    textView.append("\n " + location.getLatitude() + " " + location.getLongitude());
+                    textView.append("\n" + location.getLatitude() + " " + location.getLongitude());
                     textView.setMovementMethod(new ScrollingMovementMethod());
 
                 }catch(Exception e){
@@ -90,6 +90,7 @@ public class GPS extends Fragment {
         }
 
 
+        toggleSwitcher(boolSwitch);
         return v;
 
 
@@ -114,14 +115,17 @@ public class GPS extends Fragment {
     public void toggleSwitcher(boolean bs ){
         boolSwitch=bs;
         if(boolSwitch){
-            try {
-                Toast.makeText(getActivity().getApplicationContext(), "Please Wait unitl the GPS will ready", Toast.LENGTH_SHORT).show();
-                textView.setVisibility(View.VISIBLE);
-            }catch (Exception e){
 
+            if(textView!=null) {
+                try {
+                    Toast.makeText(getActivity().getApplicationContext(), "Please Wait unitl the GPS will ready", Toast.LENGTH_SHORT).show();
+                    textView.setVisibility(View.VISIBLE);
+                }catch (Exception e){
+
+                }
             }
-        }else{
 
+        }else{
             textView.setVisibility(View.GONE);
         }
 
