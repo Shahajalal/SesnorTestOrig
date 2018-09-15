@@ -97,14 +97,17 @@ public class MeasureFingerPressure extends Fragment {
     }
 
     public void toggleSwitcher(boolean bs) {
-       boolSwitch=bs;
-        if(boolSwitch){
-            if(measurefinger!=null) {
+        boolSwitch = bs;
+
+        if (measurefinger != null) {
+            if (boolSwitch) {
+
+
                 measurefinger.setVisibility(View.VISIBLE);
+
+            } else {
+                measurefinger.setVisibility(View.GONE);
             }
-        }else
-        {
-            measurefinger.setVisibility(View.GONE);
         }
     }
 

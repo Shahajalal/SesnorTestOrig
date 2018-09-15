@@ -48,6 +48,7 @@ public class MainActivityDash extends AppCompatActivity implements NavigationVie
     gyrometerFragment fragGyrometer = new gyrometerFragment();
     GestureFragment fragGesture = new GestureFragment();
     GPS gps=new GPS();
+    MeasureFingerPressure measureFingerPressure=new MeasureFingerPressure();
     MeasureFingerPressure measureFingerPressureFragment=new MeasureFingerPressure();
     SensorManager sensorManager;
     Sensor accelerometer,gyro;
@@ -179,20 +180,15 @@ public class MainActivityDash extends AppCompatActivity implements NavigationVie
                 if (fragAccelerometer !=null) {
                     fragAccelerometer.toggleSwitcher(true);
                 }
-               if(measureFingerPressureFragment!=null){
-                   measureFingerPressureFragment.toggleSwitcher(true);
+                if(measureFingerPressureFragment!=null){
+                    measureFingerPressureFragment.toggleSwitcher(true);
                 }
-               if(gps!=null){
+                if(gps!=null){
                     gps.toggleSwitcher(true);
                 }
-               if (fragGyrometer !=null) {
-                    fragGyrometer.toggleSwitcher(true);
-                }
-                if (fragGesture !=null) {
-                    fragGesture.toggle_switch(true);
-                }
+                if (fragGyrometer !=null) fragGyrometer.toggleSwitcher(true);
+                if (fragGesture !=null) fragGesture.toggle_switch(true);
                 startTimer();
-
 
                 //Start your timer
             }
@@ -228,12 +224,10 @@ public class MainActivityDash extends AppCompatActivity implements NavigationVie
                     if (fragAccelerometer !=null) {
                         fragAccelerometer.toggleSwitcher(false);
                     }
-                   if(gps!=null){
+                    if(gps!=null){
                         gps.toggleSwitcher(false);
                     }
-                    if (fragGyrometer !=null) {
-                        fragGyrometer.toggleSwitcher(false);
-                    }
+                    if (fragGyrometer !=null) fragGyrometer.toggleSwitcher(false);
                     Log.d(TAG, "End Button Clicked");
                 }catch (Exception e){
 
@@ -241,7 +235,6 @@ public class MainActivityDash extends AppCompatActivity implements NavigationVie
 
 
                 //Stop your timer
-
                 item.setTitle("Start");
             }
             return true;

@@ -114,19 +114,20 @@ public class GPS extends Fragment {
 
     public void toggleSwitcher(boolean bs ){
         boolSwitch=bs;
+        if(textView!=null) {
+            textView.setText("Coordinates : ");
         if(boolSwitch){
-
-            if(textView!=null) {
                 try {
                     Toast.makeText(getActivity().getApplicationContext(), "Please Wait unitl the GPS will ready", Toast.LENGTH_SHORT).show();
                     textView.setVisibility(View.VISIBLE);
                 }catch (Exception e){
 
                 }
-            }
+
 
         }else{
             textView.setVisibility(View.GONE);
+        }
         }
 
 
