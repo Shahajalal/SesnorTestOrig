@@ -1,6 +1,7 @@
 package com.lordsofts.sensortest;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
@@ -11,6 +12,7 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Looper;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
@@ -23,16 +25,43 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationCallback;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationResult;
+import com.google.android.gms.location.LocationServices;
+
 import static android.content.Context.MODE_PRIVATE;
 
 
 public class GPS extends Fragment {
     Button button;
     TextView textView;
-    LocationManager locationManager;
-    LocationListener locationListener;
     public boolean boolSwitch = false;
-    @RequiresApi(api = Build.VERSION_CODES.M)
+
+    private static final int REQUEST_CODE = 1000;
+    FusedLocationProviderClient fusedLocationProviderClient;
+    LocationRequest locationRequest;
+    LocationCallback locationCallback;
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        switch (requestCode) {
+            case REQUEST_CODE: {
+                if (grantResults.length > 0) {
+                    if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+                    } else if (grantResults[0] == PackageManager.PERMISSION_DENIED) {
+
+                    }
+                }
+            }
+        }
+    }
+
+
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -40,55 +69,18 @@ public class GPS extends Fragment {
         textView = v.findViewById(R.id.coordinatestextviewid);
         textView.setVisibility(View.GONE);
 
-        locationManager = (LocationManager) this.getActivity().getSystemService(Context.LOCATION_SERVICE);
-        locationListener = new LocationListener() {
-            @Override
-            public void onLocationChanged(Location location) {
+        if (ActivityCompat.shouldShowRequestPermissionRationale(this.getActivity(), Manifest.permission.ACCESS_FINE_LOCATION)) {
+            ActivityCompat.requestPermissions(this.getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_CODE);
 
-                try {
-                    SharedPreferences.Editor editor = getActivity().getSharedPreferences("gpsvalue", MODE_PRIVATE).edit();
-                    editor.putString("gps", "{Latitude:" + location.getLatitude() + "Longitude:" + location.getLongitude() + "}");
-                    editor.apply();
-                    textView.append("\n" + location.getLatitude() + " " + location.getLongitude());
-                    textView.setMovementMethod(new ScrollingMovementMethod());
-
-                }catch(Exception e){
-
-                }
-
+        } else {
+            buildLocationRequest();
+            buildLocationCallBack();
+            fusedLocationProviderClient= LocationServices.getFusedLocationProviderClient(this.getActivity());
+            if (ActivityCompat.checkSelfPermission(this.getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this.getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(this.getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_CODE);
             }
-
-            @Override
-            public void onStatusChanged(String s, int i, Bundle bundle) {
-
-            }
-
-            @Override
-            public void onProviderEnabled(String s) {
-
-            }
-
-            @Override
-            public void onProviderDisabled(String s) {
-                Intent intent=new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                startActivity(intent);
-
-            }
-        };
-
-        if (ActivityCompat.checkSelfPermission(this.getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this.getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                requestPermissions(new String[]{
-                        Manifest.permission.ACCESS_FINE_LOCATION,Manifest.permission.ACCESS_COARSE_LOCATION,Manifest.permission.INTERNET
-                },10);
-            }
-            return v;
-
-        }else{
-            configureButton();
+            fusedLocationProviderClient.requestLocationUpdates(locationRequest, locationCallback, Looper.myLooper());
         }
-
 
         toggleSwitcher(boolSwitch);
         return v;
@@ -96,20 +88,29 @@ public class GPS extends Fragment {
 
     }
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        switch(requestCode){
-            case 10:
-                if (grantResults.length>0 && grantResults[0]==PackageManager.PERMISSION_GRANTED){
-                    configureButton();
-                    return;
+
+    private void buildLocationCallBack() {
+
+        locationCallback=new LocationCallback()
+        {
+            @Override
+            public void onLocationResult(LocationResult locationResult) {
+                for(Location location:locationResult.getLocations()){
+                    textView.append("\nLatitude : "+String.valueOf(location.getLatitude())+"\nLongitude : "+String.valueOf(location.getLongitude()));
+                    textView.setMovementMethod(new ScrollingMovementMethod());
                 }
-        }
+            }
+        };
     }
 
-    private void configureButton() {
-                locationManager.requestLocationUpdates("gps",   100, 0, locationListener);
 
+    @SuppressLint("RestrictedApi")
+    private void buildLocationRequest() {
+        locationRequest=new LocationRequest();
+        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        locationRequest.setInterval(500);
+        locationRequest.setFastestInterval(300);
+        locationRequest.setSmallestDisplacement(10);
     }
 
     public void toggleSwitcher(boolean bs ){
@@ -118,18 +119,29 @@ public class GPS extends Fragment {
             textView.setText("Coordinates : ");
         if(boolSwitch){
                 try {
-                    Toast.makeText(getActivity().getApplicationContext(), "Please Wait unitl the GPS will ready", Toast.LENGTH_SHORT).show();
                     textView.setVisibility(View.VISIBLE);
+                    if(this.getActivity()!=null) {
+                        if (ActivityCompat.checkSelfPermission(this.getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this.getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                            ActivityCompat.requestPermissions(this.getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_CODE);
+                        }
+                    }
+                fusedLocationProviderClient.requestLocationUpdates(locationRequest, locationCallback, Looper.myLooper());
+                Toast.makeText(getActivity().getApplicationContext(), "Please Wait unitl the GPS will ready", Toast.LENGTH_SHORT).show();
+
                 }catch (Exception e){
 
                 }
 
 
         }else{
+
+            if (ActivityCompat.checkSelfPermission(this.getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this.getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(this.getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_CODE);
+            }
+            fusedLocationProviderClient.removeLocationUpdates(locationCallback);
             textView.setVisibility(View.GONE);
         }
         }
-
 
     }
 

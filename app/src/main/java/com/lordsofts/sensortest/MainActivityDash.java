@@ -48,11 +48,12 @@ public class MainActivityDash extends AppCompatActivity implements NavigationVie
     gyrometerFragment fragGyrometer = new gyrometerFragment();
     GestureFragment fragGesture = new GestureFragment();
     GPS gps=new GPS();
-    MeasureFingerPressure measureFingerPressure=new MeasureFingerPressure();
+    //MeasureFingerPressure measureFingerPressure=new MeasureFingerPressure();
     MeasureFingerPressure measureFingerPressureFragment=new MeasureFingerPressure();
     SensorManager sensorManager;
     Sensor accelerometer,gyro;
     boolean tmp = false;
+    private static final int REQUEST_CODE = 1000;
     Timer t;
     TimerTask task;
     public String location;
@@ -453,36 +454,36 @@ public class MainActivityDash extends AppCompatActivity implements NavigationVie
             case OVERLAY_REQ_CODE:
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    Toast.makeText(MainActivityDash.this, "Permission Granted!", Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(MainActivityDash.this, "Permission Granted!", Toast.LENGTH_SHORT).show();
                 } else {
-                    Toast.makeText(MainActivityDash.this, "Permission Denied!", Toast.LENGTH_SHORT).show();
+                   // Toast.makeText(MainActivityDash.this, "Permission Denied!", Toast.LENGTH_SHORT).show();
                 }
                 break;
             case EXTERNAL_READ_REQ_CODE:
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    Toast.makeText(MainActivityDash.this, "External Storage Read Permission Granted!", Toast.LENGTH_SHORT).show();
+                   // Toast.makeText(MainActivityDash.this, "External Storage Read Permission Granted!", Toast.LENGTH_SHORT).show();
                     (new DatabaseHelper(this)).CopyDB(this);
                 } else {
-                    Toast.makeText(MainActivityDash.this, "External Storage Read Permission Denied!", Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(MainActivityDash.this, "External Storage Read Permission Denied!", Toast.LENGTH_SHORT).show();
                 }
                 break;
             case EXTERNAL_WRITE_REQ_CODE:
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    Toast.makeText(MainActivityDash.this, "External Storage Write Permission Granted!", Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(MainActivityDash.this, "External Storage Write Permission Granted!", Toast.LENGTH_SHORT).show();
                     (new DatabaseHelper(this)).CopyDB(this);
                 } else {
-                    Toast.makeText(MainActivityDash.this, "External Storage Write Permission Denied!", Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(MainActivityDash.this, "External Storage Write Permission Denied!", Toast.LENGTH_SHORT).show();
                 }
                 break;
             case  READ_PHONE_STATE_REQ_CODE:
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    Toast.makeText(MainActivityDash.this, "Read Phone State Permission Granted!", Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(MainActivityDash.this, "Read Phone State Permission Granted!", Toast.LENGTH_SHORT).show();
                     (new DatabaseHelper(this)).CopyDB(this);
                 } else {
-                    Toast.makeText(MainActivityDash.this, "Read Phone State Permission Denied!", Toast.LENGTH_SHORT).show();
+                   // Toast.makeText(MainActivityDash.this, "Read Phone State Permission Denied!", Toast.LENGTH_SHORT).show();
                 }
 
                 break;
@@ -554,6 +555,7 @@ public class MainActivityDash extends AppCompatActivity implements NavigationVie
         } else {
             // Permission has already been granted
         }
+
 
 
         if (ContextCompat.checkSelfPermission(this,
