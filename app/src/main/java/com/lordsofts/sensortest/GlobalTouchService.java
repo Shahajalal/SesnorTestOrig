@@ -45,51 +45,59 @@ public class GlobalTouchService extends Service implements OnTouchListener {
 	@Override
 	public void onCreate() {
 
-		super.onCreate();
-		// create linear layout
-		touchLayout1 = new LinearLayout(this);
-		touchLayout2 = new LinearLayout(this);
-		touchLayout3 = new LinearLayout(this);
+		try {
+			super.onCreate();
+			// create linear layout
+			touchLayout1 = new LinearLayout(this);
+			touchLayout2 = new LinearLayout(this);
+			touchLayout3 = new LinearLayout(this);
 
-		// set layout width 30 px and height is equal to full screen
-		LayoutParams lp = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
-		touchLayout1.setLayoutParams(lp);
-		touchLayout2.setLayoutParams(lp);
-		touchLayout3.setLayoutParams(lp);
+			// set layout width 30 px and height is equal to full screen
+			LayoutParams lp = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
+			touchLayout1.setLayoutParams(lp);
+			touchLayout2.setLayoutParams(lp);
+			touchLayout3.setLayoutParams(lp);
 
-		//touchLayout1.setBackgroundColor(Color.RED);
-		//touchLayout2.setBackgroundColor(Color.RED);
-		//touchLayout3.setBackgroundColor(Color.RED);
-		// set color if you want layout visible on screen
+			//touchLayout1.setBackgroundColor(Color.RED);
+			//touchLayout2.setBackgroundColor(Color.RED);
+			//touchLayout3.setBackgroundColor(Color.RED);
+			// set color if you want layout visible on screen
 
-		// fetch window manager object 
-		mWindowManager = (WindowManager) getSystemService(WINDOW_SERVICE);
-		touchLayout1.setOnTouchListener(this);
-		touchLayout2.setOnTouchListener(this);
-		touchLayout3.setOnTouchListener(this);
+			// fetch window manager object
+			mWindowManager = (WindowManager) getSystemService(WINDOW_SERVICE);
+			touchLayout1.setOnTouchListener(this);
+			touchLayout2.setOnTouchListener(this);
+			touchLayout3.setOnTouchListener(this);
 
-		// set layout parameter of window manager
-		WindowManager.LayoutParams mParams = new WindowManager.LayoutParams(30,
-				WindowManager.LayoutParams.MATCH_PARENT,
-				WindowManager.LayoutParams.TYPE_SYSTEM_ERROR,
-				WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL | WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH,
-				PixelFormat.TRANSPARENT);
-		mParams.gravity = Gravity.START | Gravity.TOP;
-		mWindowManager.addView(touchLayout1, mParams);
-		mParams.gravity = Gravity.END | Gravity.TOP;
-		mWindowManager.addView(touchLayout2, mParams);
-		mParams.height = 30;
-		mParams.width = WindowManager.LayoutParams.MATCH_PARENT;
-		mParams.gravity = Gravity.END | Gravity.TOP;
-		mWindowManager.addView(touchLayout3, mParams);
+			// set layout parameter of window manager
+			WindowManager.LayoutParams mParams = new WindowManager.LayoutParams(30,
+					WindowManager.LayoutParams.MATCH_PARENT,
+					WindowManager.LayoutParams.TYPE_SYSTEM_ERROR,
+					WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL | WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH,
+					PixelFormat.TRANSPARENT);
+			mParams.gravity = Gravity.START | Gravity.TOP;
+			mWindowManager.addView(touchLayout1, mParams);
+			mParams.gravity = Gravity.END | Gravity.TOP;
+			mWindowManager.addView(touchLayout2, mParams);
+			mParams.height = 30;
+			mParams.width = WindowManager.LayoutParams.MATCH_PARENT;
+			mParams.gravity = Gravity.END | Gravity.TOP;
+			mWindowManager.addView(touchLayout3, mParams);
+		}catch(Exception e){
+
+		}
 	}
 
 	@Override
 	public void onDestroy() {
-		if (mWindowManager != null) {
-			if (touchLayout1 != null) mWindowManager.removeView(touchLayout1);
-			if (touchLayout2 != null) mWindowManager.removeView(touchLayout2);
-			if (touchLayout3 != null) mWindowManager.removeView(touchLayout3);
+		try {
+			if (mWindowManager != null) {
+				if (touchLayout1 != null) mWindowManager.removeView(touchLayout1);
+				if (touchLayout2 != null) mWindowManager.removeView(touchLayout2);
+				if (touchLayout3 != null) mWindowManager.removeView(touchLayout3);
+			}
+		}catch(Exception e){
+
 		}
 		super.onDestroy();
 	}
